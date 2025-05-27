@@ -1,12 +1,13 @@
-package roomescape.presentation.support;
+package roomescape.infrastructure;
 
 import java.util.Base64;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.web.client.RestClient;
+import roomescape.application.support.TossPaymentService;
 import roomescape.dto.request.TossPaymentConfirmDto;
 import roomescape.dto.response.TossPaymentConfirmResponseDto;
 
-public class TossPaymentWithRestClient {
+public class TossPaymentWithRestClient implements TossPaymentService {
 
     private static final String AUTHORIZATION_HEADER = "Authorization";
     private static final String AUTHORIZATION_SCHEME = "Basic ";

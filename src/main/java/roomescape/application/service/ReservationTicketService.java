@@ -5,6 +5,7 @@ import java.util.List;
 import java.util.Optional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+import roomescape.application.support.TossPaymentService;
 import roomescape.common.exception.DuplicatedException;
 import roomescape.common.exception.PaymentException;
 import roomescape.dto.LoginMember;
@@ -28,7 +29,6 @@ import roomescape.persistence.repository.ThemeRepository;
 import roomescape.persistence.repository.TossPaymentRepository;
 import roomescape.persistence.repository.WaitingRepository;
 import roomescape.persistence.vo.Period;
-import roomescape.presentation.support.TossPaymentWithRestClient;
 
 @Service
 @RequiredArgsConstructor
@@ -40,8 +40,7 @@ public class ReservationTicketService {
     private final MemberRepository memberRepository;
     private final WaitingRepository waitingRepository;
     private final TossPaymentRepository tossPaymentRepository;
-    private final TossPaymentWithRestClient tossPaymentWithRestClient;
-
+    private final TossPaymentService tossPaymentService;
 
     public ReservationTicketResponseDto saveReservation(ReservationTicketRegisterDto reservationTicketRegisterDto,
                                                         LoginMember loginMember) {
@@ -61,7 +60,7 @@ public class ReservationTicketService {
                 reservationTicketRegisterDto.amount()
         );
 
-        TossPaymentConfirmResponseDto tossPaymentConfirmResponseDto = tossPaymentWithRestClient.requestConfirmation(
+        TossPaymentConfirmResponseDto tossPaymentConfirmResponseDto = tossPaymentService.requestConfirmation(
                 tossPaymentConfirmDto);
 
         if (!tossPaymentConfirmResponseDto.status().equals("DONE")) {
