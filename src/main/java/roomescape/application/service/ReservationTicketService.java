@@ -68,8 +68,6 @@ public class ReservationTicketService {
         }
 
         ReservationTicket savedReservationTicket = reservationTicketRepository.save(reservationTicket);
-        tossPaymentRepository.save(tossPayment);
-
         return new ReservationTicketResponseDto(savedReservationTicket);
     }
 
