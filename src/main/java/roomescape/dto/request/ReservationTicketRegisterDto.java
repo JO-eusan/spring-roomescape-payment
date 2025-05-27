@@ -13,7 +13,10 @@ import roomescape.model.Theme;
 public record ReservationTicketRegisterDto(
         @NotBlank String date,
         @NotNull Long timeId,
-        @NotNull Long themeId
+        @NotNull Long themeId,
+        @NotBlank String paymentKey,
+        @NotBlank String orderId,
+        @NotNull Long amount
 ) {
 
     public ReservationTicket convertToReservation(ReservationTime reservationTime, Theme theme, Member member) {
@@ -24,4 +27,5 @@ public record ReservationTicketRegisterDto(
             throw new IllegalStateException("날짜 형식이 잘못되었습니다", e);
         }
     }
+
 }

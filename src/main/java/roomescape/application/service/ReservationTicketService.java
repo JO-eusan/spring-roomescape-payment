@@ -6,23 +6,29 @@ import java.util.Optional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import roomescape.common.exception.DuplicatedException;
+import roomescape.common.exception.PaymentException;
 import roomescape.dto.LoginMember;
 import roomescape.dto.request.ReservationSearchDto;
 import roomescape.dto.request.ReservationTicketRegisterDto;
+import roomescape.dto.request.TossPaymentConfirmDto;
 import roomescape.dto.response.MemberReservationResponseDto;
 import roomescape.dto.response.ReservationTicketResponseDto;
+import roomescape.dto.response.TossPaymentConfirmResponseDto;
 import roomescape.model.Member;
 import roomescape.model.Reservation;
 import roomescape.model.ReservationTicket;
 import roomescape.model.ReservationTime;
 import roomescape.model.Theme;
+import roomescape.model.TossPayment;
 import roomescape.model.Waiting;
 import roomescape.persistence.repository.MemberRepository;
 import roomescape.persistence.repository.ReservationTicketRepository;
 import roomescape.persistence.repository.ReservationTimeRepository;
 import roomescape.persistence.repository.ThemeRepository;
+import roomescape.persistence.repository.TossPaymentRepository;
 import roomescape.persistence.repository.WaitingRepository;
 import roomescape.persistence.vo.Period;
+import roomescape.presentation.support.TossPaymentWithRestClient;
 
 @Service
 @RequiredArgsConstructor
@@ -33,13 +39,38 @@ public class ReservationTicketService {
     private final ThemeRepository themeRepository;
     private final MemberRepository memberRepository;
     private final WaitingRepository waitingRepository;
+    private final TossPaymentRepository tossPaymentRepository;
+    private final TossPaymentWithRestClient tossPaymentWithRestClient;
+
 
     public ReservationTicketResponseDto saveReservation(ReservationTicketRegisterDto reservationTicketRegisterDto,
                                                         LoginMember loginMember) {
         ReservationTicket reservationTicket = createReservation(reservationTicketRegisterDto, loginMember);
         assertReservationIsNotDuplicated(reservationTicket);
 
+        TossPayment tossPayment = new TossPayment(
+                reservationTicketRegisterDto.paymentKey(),
+                reservationTicketRegisterDto.orderId(),
+                reservationTicketRegisterDto.amount(),
+                reservationTicket
+        );
+
+        TossPaymentConfirmDto tossPaymentConfirmDto = new TossPaymentConfirmDto(
+                reservationTicketRegisterDto.paymentKey(),
+                reservationTicketRegisterDto.orderId(),
+                reservationTicketRegisterDto.amount()
+        );
+
+        TossPaymentConfirmResponseDto tossPaymentConfirmResponseDto = tossPaymentWithRestClient.requestConfirmation(
+                tossPaymentConfirmDto);
+
+        if (!tossPaymentConfirmResponseDto.status().equals("DONE")) {
+            throw new PaymentException("승인되지 않은 결제 내역입니다.");
+        }
+
         ReservationTicket savedReservationTicket = reservationTicketRepository.save(reservationTicket);
+        tossPaymentRepository.save(tossPayment);
+
         return new ReservationTicketResponseDto(savedReservationTicket);
     }
 

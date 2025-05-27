@@ -5,6 +5,8 @@ import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import jakarta.persistence.JoinColumn;
+import jakarta.persistence.OneToOne;
 import lombok.NoArgsConstructor;
 
 @Entity
@@ -24,4 +26,14 @@ public class TossPayment {
     @Column(nullable = false)
     private Long amount;
 
+    @OneToOne
+    @JoinColumn(name = "reservation_ticket_id", nullable = false)
+    private ReservationTicket reservationTicket;
+
+    public TossPayment(String paymentKey, String orderId, Long amount, ReservationTicket reservationTicket) {
+        this.paymentKey = paymentKey;
+        this.orderId = orderId;
+        this.amount = amount;
+        this.reservationTicket = reservationTicket;
+    }
 }
