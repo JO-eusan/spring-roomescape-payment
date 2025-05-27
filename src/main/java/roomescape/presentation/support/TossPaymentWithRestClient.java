@@ -9,7 +9,7 @@ import roomescape.dto.response.TossPaymentConfirmResponseDto;
 public class TossPaymentWithRestClient {
 
     private static final String AUTHORIZATION_HEADER = "Authorization";
-    private static final String AUTHORIZATION_SCHEME= "Basic ";
+    private static final String AUTHORIZATION_SCHEME = "Basic ";
 
     @Value("${security.toss.payment.secret-key}")
     private String secretKey;
