@@ -25,7 +25,7 @@ import roomescape.dto.request.ReservationTicketRegisterDto;
 import roomescape.dto.request.TossPaymentConfirmDto;
 import roomescape.dto.response.ReservationTicketResponseDto;
 import roomescape.dto.response.TossPaymentConfirmResponseDto;
-import roomescape.infrastructure.TossPaymentWithRestClient;
+import roomescape.infrastructure.payment.toss.TossPaymentWithRestClient;
 import roomescape.infrastructure.db.MemberJpaRepository;
 import roomescape.infrastructure.db.ThemeJpaRepository;
 import roomescape.infrastructure.db.TossPaymentJpaRepository;

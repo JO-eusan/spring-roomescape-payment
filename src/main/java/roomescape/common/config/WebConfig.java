@@ -7,7 +7,7 @@ import org.springframework.web.client.RestClient;
 import org.springframework.web.method.support.HandlerMethodArgumentResolver;
 import org.springframework.web.servlet.config.annotation.InterceptorRegistry;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
-import roomescape.infrastructure.TossPaymentWithRestClient;
+import roomescape.infrastructure.payment.toss.TossPaymentWithRestClient;
 import roomescape.presentation.interceptor.AdminAuthInterceptor;
 import roomescape.presentation.resvoler.LoginMemberArgumentResolver;
 
