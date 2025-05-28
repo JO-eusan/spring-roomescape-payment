@@ -10,6 +10,9 @@ import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.boot.test.context.SpringBootTest.WebEnvironment;
+import org.springframework.test.annotation.DirtiesContext;
+import org.springframework.test.annotation.DirtiesContext.ClassMode;
 import roomescape.dto.response.WaitingAdminResponseDto;
 import roomescape.infrastructure.db.MemberJpaRepository;
 import roomescape.infrastructure.db.ReservationTimeJpaRepository;
@@ -22,7 +25,8 @@ import roomescape.model.Role;
 import roomescape.model.Theme;
 import roomescape.model.Waiting;
 
-@SpringBootTest
+@SpringBootTest(webEnvironment = WebEnvironment.DEFINED_PORT)
+@DirtiesContext(classMode = ClassMode.AFTER_EACH_TEST_METHOD)
 class WaitingAdminServiceTest {
 
     @Autowired

@@ -8,23 +8,42 @@ import java.time.LocalDate;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+
+import static io.restassured.RestAssured.post;
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.Mockito.when;
+import static org.springframework.test.web.client.match.MockRestRequestMatchers.requestTo;
+import static org.springframework.test.web.client.response.MockRestResponseCreators.withSuccess;
+
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.autoconfigure.web.client.AutoConfigureMockRestServiceServer;
+import org.springframework.boot.test.autoconfigure.webservices.client.WebServiceClientTest;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.http.MediaType;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.support.GeneratedKeyHolder;
 import org.springframework.jdbc.support.KeyHolder;
 import org.springframework.test.annotation.DirtiesContext;
+import org.springframework.test.annotation.DirtiesContext.ClassMode;
+import org.springframework.test.context.bean.override.mockito.MockitoBean;
+import org.springframework.test.web.client.MockRestServiceServer;
+import roomescape.dto.request.TossPaymentConfirmDto;
 import roomescape.dto.response.ReservationTicketResponseDto;
+import roomescape.dto.response.TossPaymentConfirmResponseDto;
+import roomescape.infrastructure.TossPaymentWithRestClient;
 import roomescape.infrastructure.jwt.JjwtJwtTokenProvider;
 import roomescape.model.Role;
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.DEFINED_PORT)
-@DirtiesContext(classMode = DirtiesContext.ClassMode.BEFORE_EACH_TEST_METHOD)
+@DirtiesContext(classMode = ClassMode.AFTER_EACH_TEST_METHOD)
 class ReservationTicketAcceptanceTest {
+
+    @MockitoBean
+    TossPaymentWithRestClient tossPaymentWithRestClient;
 
     @Autowired
     private JdbcTemplate jdbcTemplate;
@@ -40,8 +59,8 @@ class ReservationTicketAcceptanceTest {
     void setUp() {
         this.email = "email@gmail.com";
         jdbcTemplate.update("INSERT INTO member"
-                        + " (name, email,password, role) VALUES (?, ?, ?, ?)"
-                , "히로", email, "password", Role.ADMIN.name());
+                + " (name, email,password, role) VALUES (?, ?, ?, ?)"
+            , "히로", email, "password", Role.ADMIN.name());
     }
 
     @Test
@@ -52,13 +71,14 @@ class ReservationTicketAcceptanceTest {
 
         // when
         List<ReservationTicketResponseDto> reservations = RestAssured.given().log().all()
-                .cookie("token", createToken())
-                .when().get("/reservations")
-                .then().log().all()
-                .statusCode(200).extract()
-                .jsonPath().getList(".", ReservationTicketResponseDto.class);
+            .cookie("token", createToken())
+            .when().get("/reservations")
+            .then().log().all()
+            .statusCode(200).extract()
+            .jsonPath().getList(".", ReservationTicketResponseDto.class);
 
-        Integer count = jdbcTemplate.queryForObject("SELECT count(1) from reservation_ticket", Integer.class);
+        Integer count = jdbcTemplate.queryForObject("SELECT count(1) from reservation_ticket",
+            Integer.class);
 
         // then
         assertThat(reservations.size()).isEqualTo(count);
@@ -79,12 +99,12 @@ class ReservationTicketAcceptanceTest {
 
         // when & then
         RestAssured.given().log().all()
-                .contentType(ContentType.JSON)
-                .cookie("token", createToken())
-                .body(params)
-                .when().post("/reservations")
-                .then().log().all()
-                .statusCode(400);
+            .contentType(ContentType.JSON)
+            .cookie("token", createToken())
+            .body(params)
+            .when().post("/reservations/toss")
+            .then().log().all()
+            .statusCode(400);
     }
 
     @Test
@@ -102,12 +122,12 @@ class ReservationTicketAcceptanceTest {
 
         // when & then
         RestAssured.given().log().all()
-                .contentType(ContentType.JSON)
-                .cookie("token", createToken())
-                .body(params)
-                .when().post("/reservations")
-                .then().log().all()
-                .statusCode(404);
+            .contentType(ContentType.JSON)
+            .cookie("token", createToken())
+            .body(params)
+            .when().post("/reservations/toss")
+            .then().log().all()
+            .statusCode(404);
     }
 
     @Test
@@ -125,12 +145,12 @@ class ReservationTicketAcceptanceTest {
 
         // when & then
         RestAssured.given().log().all()
-                .contentType(ContentType.JSON)
-                .cookie("token", createToken())
-                .body(params)
-                .when().post("/reservations")
-                .then().log().all()
-                .statusCode(404);
+            .contentType(ContentType.JSON)
+            .cookie("token", createToken())
+            .body(params)
+            .when().post("/reservations/toss")
+            .then().log().all()
+            .statusCode(404);
     }
 
     @Test
@@ -152,12 +172,12 @@ class ReservationTicketAcceptanceTest {
 
         // when & then
         RestAssured.given().log().all()
-                .contentType(ContentType.JSON)
-                .cookie("token", createToken())
-                .body(params)
-                .when().post("/reservations")
-                .then().log().all()
-                .statusCode(409);
+            .contentType(ContentType.JSON)
+            .cookie("token", createToken())
+            .body(params)
+            .when().post("/reservations/toss")
+            .then().log().all()
+            .statusCode(409);
     }
 
     @Test
@@ -173,14 +193,21 @@ class ReservationTicketAcceptanceTest {
         params.put("orderId", "orderId");
         params.put("amount", "1000");
 
+        TossPaymentConfirmResponseDto tossPaymentConfirmResponseDto = new TossPaymentConfirmResponseDto(
+            "DONE", "paymentKey", "orderId"
+        );
+
+        when(tossPaymentWithRestClient.requestConfirmation(any(TossPaymentConfirmDto.class)))
+            .thenReturn(tossPaymentConfirmResponseDto);
+
         // when & then
         RestAssured.given().log().all()
-                .contentType(ContentType.JSON)
-                .cookie("token", createToken())
-                .body(params)
-                .when().post("/reservations")
-                .then().log().all()
-                .statusCode(201);
+            .contentType(ContentType.JSON)
+            .cookie("token", createToken())
+            .body(params)
+            .when().post("/reservations/toss")
+            .then().log().all()
+            .statusCode(201);
     }
 
     @Test
@@ -193,11 +220,11 @@ class ReservationTicketAcceptanceTest {
 
         // when & then
         RestAssured.given().log().all()
-                .contentType(ContentType.JSON)
-                .cookie("token", createToken())
-                .when().delete("/reservations/" + savedId)
-                .then().log().all()
-                .statusCode(204);
+            .contentType(ContentType.JSON)
+            .cookie("token", createToken())
+            .when().delete("/reservations/" + savedId)
+            .then().log().all()
+            .statusCode(204);
     }
 
     private Long insertNewReservationWithJdbcTemplate(final Long timeId, final Long themeId) {
@@ -205,8 +232,8 @@ class ReservationTicketAcceptanceTest {
 
         jdbcTemplate.update(connection -> {
             PreparedStatement ps = connection.prepareStatement(
-                    "INSERT INTO reservation_ticket (date, reservation_time_id, theme_id, member_id) VALUES (?, ?, ?, ?)",
-                    new String[]{"id"});
+                "INSERT INTO reservation_ticket (date, reservation_time_id, theme_id, member_id) VALUES (?, ?, ?, ?)",
+                new String[]{"id"});
             ps.setDate(1, Date.valueOf(tomorrow));
             ps.setLong(2, timeId);
             ps.setLong(3, themeId);

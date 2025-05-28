@@ -8,13 +8,17 @@ import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.boot.test.context.SpringBootTest.WebEnvironment;
+import org.springframework.test.annotation.DirtiesContext;
+import org.springframework.test.annotation.DirtiesContext.ClassMode;
 import roomescape.common.exception.NotFoundException;
 import roomescape.common.exception.UnauthorizedException;
 import roomescape.dto.request.LoginRequestDto;
 import roomescape.infrastructure.jwt.JjwtJwtTokenProvider;
 import roomescape.persistence.repository.MemberRepository;
 
-@SpringBootTest
+@SpringBootTest(webEnvironment = WebEnvironment.DEFINED_PORT)
+@DirtiesContext(classMode = ClassMode.AFTER_EACH_TEST_METHOD)
 public class AuthServiceTest {
 
     @Autowired

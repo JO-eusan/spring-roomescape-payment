@@ -28,7 +28,7 @@ import roomescape.model.Theme;
 import roomescape.model.Waiting;
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
-@DirtiesContext(classMode = DirtiesContext.ClassMode.BEFORE_EACH_TEST_METHOD)
+@DirtiesContext(classMode = DirtiesContext.ClassMode.AFTER_EACH_TEST_METHOD)
 public class WaitingAdminAcceptanceTest {
 
     @LocalServerPort

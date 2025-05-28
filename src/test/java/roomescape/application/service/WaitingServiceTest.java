@@ -13,6 +13,9 @@ import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.boot.test.context.SpringBootTest.WebEnvironment;
+import org.springframework.test.annotation.DirtiesContext;
+import org.springframework.test.annotation.DirtiesContext.ClassMode;
 import roomescape.common.exception.NotFoundException;
 import roomescape.common.exception.UnauthorizedException;
 import roomescape.dto.LoginMember;
@@ -31,7 +34,8 @@ import roomescape.model.Role;
 import roomescape.model.Theme;
 import roomescape.model.Waiting;
 
-@SpringBootTest
+@SpringBootTest(webEnvironment = WebEnvironment.DEFINED_PORT)
+@DirtiesContext(classMode = ClassMode.AFTER_EACH_TEST_METHOD)
 public class WaitingServiceTest {
 
     @Autowired
