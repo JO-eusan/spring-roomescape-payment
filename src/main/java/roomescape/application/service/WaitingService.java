@@ -6,6 +6,7 @@ import java.util.List;
 import java.util.Optional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import roomescape.common.exception.OperationNotAllowedException;
 import roomescape.common.exception.UnauthorizedException;
 import roomescape.dto.LoginMember;
@@ -34,17 +35,20 @@ public class WaitingService {
     private final ThemeRepository themeRepository;
     private final ReservationTicketRepository reservationTicketRepository;
 
-    public WaitingResponseDto registerWaiting(LoginMember loginMember, WaitingRegisterDto waitingRegisterDto) {
+    @Transactional
+    public WaitingResponseDto registerWaiting(LoginMember loginMember,
+        WaitingRegisterDto waitingRegisterDto) {
         Member member = memberRepository.findById(loginMember.id());
-        ReservationTime reservationTime = reservationTimeRepository.findById(waitingRegisterDto.time());
+        ReservationTime reservationTime = reservationTimeRepository.findById(
+            waitingRegisterDto.time());
         Theme theme = themeRepository.findById(waitingRegisterDto.theme());
 
         Reservation reservation = new Reservation(
-                waitingRegisterDto.date(),
-                reservationTime,
-                theme,
-                member,
-                LocalDate.now()
+            waitingRegisterDto.date(),
+            reservationTime,
+            theme,
+            member,
+            LocalDate.now()
         );
 
         validateReservationExistsForWaiting(reservation);
@@ -58,13 +62,14 @@ public class WaitingService {
 
     private void validateReservationExistsForWaiting(Reservation reservation) {
         Optional<ReservationTicket> foundReservationTicket = reservationTicketRepository.findForThemeAndReservationTimeOnDate(
-                reservation);
+            reservation);
 
         if (foundReservationTicket.isEmpty()) {
             throw new OperationNotAllowedException("예약 내역이 존재하지 않아 대기를 등록할 수 없습니다.");
         }
     }
 
+    @Transactional
     public void deleteWaiting(LoginMember loginMember, Long id) {
         Waiting waiting = waitingRepository.findById(id);
         Member member = memberRepository.findById(loginMember.id());
@@ -80,11 +85,11 @@ public class WaitingService {
         List<Waiting> myWaitings = waitingRepository.findForMember(loginMember.id());
 
         return myWaitings.stream()
-                .map(waiting -> {
-                    int count = waitingRepository.countWaitingBefore(waiting);
-                    return new MemberWaitingResponseDto(waiting, count + 1);
-                })
-                .toList();
+            .map(waiting -> {
+                int count = waitingRepository.countWaitingBefore(waiting);
+                return new MemberWaitingResponseDto(waiting, count + 1);
+            })
+            .toList();
     }
 }
 

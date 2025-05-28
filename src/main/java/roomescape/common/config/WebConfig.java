@@ -7,9 +7,9 @@ import org.springframework.web.client.RestClient;
 import org.springframework.web.method.support.HandlerMethodArgumentResolver;
 import org.springframework.web.servlet.config.annotation.InterceptorRegistry;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
+import roomescape.infrastructure.TossPaymentWithRestClient;
 import roomescape.presentation.interceptor.AdminAuthInterceptor;
 import roomescape.presentation.resvoler.LoginMemberArgumentResolver;
-import roomescape.infrastructure.TossPaymentWithRestClient;
 
 @Configuration
 public class WebConfig implements WebMvcConfigurer {
@@ -19,16 +19,16 @@ public class WebConfig implements WebMvcConfigurer {
     private final AdminAuthInterceptor adminAuthInterceptor;
 
     public WebConfig(LoginMemberArgumentResolver loginMemberArgumentResolver,
-                     AdminAuthInterceptor adminAuthInterceptor) {
+        AdminAuthInterceptor adminAuthInterceptor) {
         this.loginMemberArgumentResolver = loginMemberArgumentResolver;
         this.adminAuthInterceptor = adminAuthInterceptor;
     }
 
     @Bean
     public TossPaymentWithRestClient tossPaymentWithRestClient() {
-        return new TossPaymentWithRestClient(
-                RestClient.builder().baseUrl("https://api.tosspayments.com/v1/payments").build()
-        );
+        return new TossPaymentWithRestClient(RestClient.builder()
+            .baseUrl("https://api.tosspayments.com/v1/payments")
+            .build());
     }
 
     @Override
