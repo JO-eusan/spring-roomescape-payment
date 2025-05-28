@@ -89,6 +89,9 @@ public class MissionStepTest {
         params.put("date", String.valueOf(LocalDate.now().plusDays(1)));
         params.put("timeId", "1");
         params.put("themeId", "1");
+        params.put("paymentKey", "paymentKey");
+        params.put("orderId", "orderId");
+        params.put("amount", "1000");
 
         RestAssured.given().log().all()
                 .contentType(ContentType.JSON)
@@ -158,6 +161,9 @@ public class MissionStepTest {
         params.put("date", String.valueOf(LocalDate.now().plusDays(1)));
         params.put("timeId", "1");
         params.put("themeId", "1");
+        params.put("paymentKey", "paymentKey");
+        params.put("orderId", "orderId");
+        params.put("amount", "1000");
 
         RestAssured.given().log().all()
                 .contentType(ContentType.JSON)
@@ -212,6 +218,9 @@ public class MissionStepTest {
         reservation.put("date", String.valueOf(LocalDate.now().plusDays(1)));
         reservation.put("timeId", 1);
         reservation.put("themeId", 1);
+        reservation.put("paymentKey", "paymentKey");
+        reservation.put("orderId", "orderId");
+        reservation.put("amount", "1000");
 
         RestAssured.given().log().all()
                 .contentType(ContentType.JSON)

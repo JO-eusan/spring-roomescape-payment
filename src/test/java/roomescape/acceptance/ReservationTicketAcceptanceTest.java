@@ -73,6 +73,9 @@ class ReservationTicketAcceptanceTest {
         params.put("date", "invalidDateRequest");
         params.put("timeId", "1");
         params.put("themeId", "1");
+        params.put("paymentKey", "paymentKey");
+        params.put("orderId", "orderId");
+        params.put("amount", "1000");
 
         // when & then
         RestAssured.given().log().all()
@@ -93,6 +96,9 @@ class ReservationTicketAcceptanceTest {
         params.put("date", tomorrow.toString());
         params.put("timeId", "345");
         params.put("themeId", "1");
+        params.put("paymentKey", "paymentKey");
+        params.put("orderId", "orderId");
+        params.put("amount", "1000");
 
         // when & then
         RestAssured.given().log().all()
@@ -113,6 +119,9 @@ class ReservationTicketAcceptanceTest {
         params.put("date", tomorrow.toString());
         params.put("timeId", "1");
         params.put("themeId", "123");
+        params.put("paymentKey", "paymentKey");
+        params.put("orderId", "orderId");
+        params.put("amount", "1000");
 
         // when & then
         RestAssured.given().log().all()
@@ -137,6 +146,9 @@ class ReservationTicketAcceptanceTest {
         params.put("date", tomorrow.toString());
         params.put("timeId", timeId.toString());
         params.put("themeId", themeId.toString());
+        params.put("paymentKey", "paymentKey");
+        params.put("orderId", "orderId");
+        params.put("amount", "1000");
 
         // when & then
         RestAssured.given().log().all()
@@ -157,6 +169,9 @@ class ReservationTicketAcceptanceTest {
         params.put("date", tomorrow.toString());
         params.put("timeId", "1");
         params.put("themeId", "1");
+        params.put("paymentKey", "paymentKey");
+        params.put("orderId", "orderId");
+        params.put("amount", "1000");
 
         // when & then
         RestAssured.given().log().all()

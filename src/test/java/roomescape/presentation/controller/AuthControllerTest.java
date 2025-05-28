@@ -12,10 +12,10 @@ import org.springframework.test.web.servlet.MockMvc;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.cookie;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
+import roomescape.application.service.AuthService;
 import roomescape.dto.request.LoginRequestDto;
 import roomescape.dto.response.TokenResponseDto;
 import roomescape.presentation.support.CookieUtils;
-import roomescape.application.service.AuthService;
 
 @WebMvcTest({AuthController.class, CookieUtils.class})
 public class AuthControllerTest {

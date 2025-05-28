@@ -5,7 +5,6 @@ import java.time.LocalDateTime;
 import java.time.LocalTime;
 import java.util.List;
 import java.util.Optional;
-import lombok.extern.slf4j.Slf4j;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.junit.jupiter.api.Assertions.assertAll;
@@ -15,7 +14,6 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.annotation.DirtiesContext;
-import org.springframework.test.annotation.DirtiesContext.ClassMode;
 import roomescape.common.exception.DuplicatedException;
 import roomescape.dto.LoginMember;
 import roomescape.dto.request.ReservationTicketRegisterDto;
@@ -35,9 +33,8 @@ import roomescape.persistence.repository.MemberRepository;
 import roomescape.persistence.repository.ReservationTicketRepository;
 import roomescape.persistence.repository.ReservationTimeRepository;
 
-@Slf4j
-@SpringBootTest
-@DirtiesContext(classMode = ClassMode.BEFORE_EACH_TEST_METHOD)
+@SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.DEFINED_PORT)
+@DirtiesContext(classMode = DirtiesContext.ClassMode.BEFORE_EACH_TEST_METHOD)
 class ReservationTicketServiceTest {
 
     @Autowired
@@ -76,6 +73,9 @@ class ReservationTicketServiceTest {
         ReservationTicketRegisterDto request = new ReservationTicketRegisterDto(
                 tomorrow.toString(),
                 1L,
+                1L,
+                "paymentKey",
+                "orderId",
                 1L
         );
 
@@ -95,7 +95,13 @@ class ReservationTicketServiceTest {
     void test3() {
         // given
         ReservationTicketRegisterDto request = new ReservationTicketRegisterDto(
-                LocalDate.now().plusDays(1).toString(), 1L, 1L);
+                LocalDate.now().plusDays(1).toString(),
+                1L,
+                1L,
+                "paymentKey",
+                "orderId",
+                1L
+        );
         ReservationTicketResponseDto saved = this.reservationTicketService.saveReservation(request, this.loginMember);
 
         // when
@@ -111,10 +117,22 @@ class ReservationTicketServiceTest {
     void test4() {
         // given
         ReservationTicketRegisterDto request = new ReservationTicketRegisterDto(
-                LocalDate.now().plusDays(1).toString(), 1L, 1L);
+                LocalDate.now().plusDays(1).toString(),
+                1L,
+                1L,
+                "paymentKey",
+                "orderId",
+                1L
+        );
         this.reservationTicketService.saveReservation(request, this.loginMember);
         ReservationTicketRegisterDto savedRequest = new ReservationTicketRegisterDto(
-                LocalDate.now().plusDays(1).toString(), 1L, 1L);
+                LocalDate.now().plusDays(1).toString(),
+                1L,
+                1L,
+                "paymentKey",
+                "orderId",
+                1L
+        );
 
         // when && then
         assertThatThrownBy(
@@ -127,7 +145,13 @@ class ReservationTicketServiceTest {
     void test5() {
         // given
         ReservationTicketRegisterDto request = new ReservationTicketRegisterDto(
-                LocalDate.now().toString(), 1L, 1L);
+                LocalDate.now().toString(),
+                1L,
+                1L,
+                "paymentKey",
+                "orderId",
+                1L
+        );
         // when && then
         assertThatThrownBy(
                 () -> this.reservationTicketService.saveReservation(request, this.loginMember))

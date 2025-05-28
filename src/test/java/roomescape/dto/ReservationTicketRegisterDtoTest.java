@@ -1,9 +1,8 @@
 package roomescape.dto;
 
-import static org.assertj.core.api.Assertions.assertThatThrownBy;
-
 import java.time.LocalTime;
 import java.util.stream.Stream;
+import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.Arguments;
@@ -28,7 +27,14 @@ class ReservationTicketRegisterDtoTest {
     @DisplayName("날짜 형식이 올바르지 않은 경우 예외 처리한다.")
     void test(String input) {
         //given
-        ReservationTicketRegisterDto reservationTicketRegisterDto = new ReservationTicketRegisterDto(input, 1L, 1L);
+        ReservationTicketRegisterDto reservationTicketRegisterDto = new ReservationTicketRegisterDto(
+                input,
+                1L,
+                1L,
+                "paymentKey",
+                "orderId",
+                1L
+        );
 
         // when & then
         assertThatThrownBy(
