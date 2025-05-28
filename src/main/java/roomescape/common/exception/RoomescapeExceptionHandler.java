@@ -21,6 +21,20 @@ public class RoomescapeExceptionHandler {
         return "서버 내부에서 알 수 없는 문제가 발생했습니다.";
     }
 
+    @ExceptionHandler(PaymentServerException.class)
+    @ResponseStatus(HttpStatus.INTERNAL_SERVER_ERROR)
+    public String handlePaymentServerException(Exception ex) {
+        logger.error(ex.getMessage(), ex);
+        return ex.getMessage();
+    }
+
+    @ExceptionHandler(PaymentClientException.class)
+    @ResponseStatus(HttpStatus.BAD_REQUEST)
+    public String handlePaymentClientException(Exception ex) {
+        logger.error(ex.getMessage(), ex);
+        return ex.getMessage();
+    }
+
     @ExceptionHandler({IllegalStateException.class, DataFormatException.class, IllegalArgumentException.class})
     @ResponseStatus(HttpStatus.BAD_REQUEST)
     public String handleException(Exception ex) {

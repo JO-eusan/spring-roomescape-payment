@@ -5,9 +5,9 @@ import java.util.List;
 import java.util.Optional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
-import roomescape.application.support.TossPaymentService;
+import roomescape.application.support.TossPaymentWithHttpClient;
 import roomescape.common.exception.DuplicatedException;
-import roomescape.common.exception.PaymentException;
+import roomescape.common.exception.PaymentClientException;
 import roomescape.dto.LoginMember;
 import roomescape.dto.request.ReservationSearchDto;
 import roomescape.dto.request.ReservationTicketRegisterDto;
@@ -40,7 +40,7 @@ public class ReservationTicketService {
     private final MemberRepository memberRepository;
     private final WaitingRepository waitingRepository;
     private final TossPaymentRepository tossPaymentRepository;
-    private final TossPaymentService tossPaymentService;
+    private final TossPaymentWithHttpClient tossPaymentWithHttpClient;
 
     public ReservationTicketResponseDto saveReservation(ReservationTicketRegisterDto reservationTicketRegisterDto,
                                                         LoginMember loginMember) {
@@ -60,14 +60,16 @@ public class ReservationTicketService {
                 reservationTicketRegisterDto.amount()
         );
 
-        TossPaymentConfirmResponseDto tossPaymentConfirmResponseDto = tossPaymentService.requestConfirmation(
+        TossPaymentConfirmResponseDto tossPaymentConfirmResponseDto = tossPaymentWithHttpClient.requestConfirmation(
                 tossPaymentConfirmDto);
 
         if (!tossPaymentConfirmResponseDto.status().equals("DONE")) {
-            throw new PaymentException("승인되지 않은 결제 내역입니다.");
+            throw new PaymentClientException("승인되지 않은 결제 내역입니다.");
         }
 
         ReservationTicket savedReservationTicket = reservationTicketRepository.save(reservationTicket);
+        tossPaymentRepository.save(tossPayment);
+
         return new ReservationTicketResponseDto(savedReservationTicket);
     }
 
