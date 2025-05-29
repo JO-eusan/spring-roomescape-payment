@@ -14,17 +14,15 @@ import org.springframework.context.annotation.Import;
 import org.springframework.http.HttpMethod;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
-import org.springframework.test.context.TestPropertySource;
 import org.springframework.test.web.client.MockRestServiceServer;
-import roomescape.common.config.PaymentConfig;
+import roomescape.common.config.TestPaymentConfig;
 import roomescape.common.exception.PaymentClientException;
 import roomescape.common.exception.PaymentServerException;
 import roomescape.dto.request.TossPaymentConfirmDto;
 import roomescape.infrastructure.payment.toss.TossPaymentWithRestClient;
 
 @RestClientTest(value = TossPaymentWithRestClient.class)
-@Import(PaymentConfig.class)
-@TestPropertySource(properties = {"security.toss.payment.secret-key=test-secret"})
+@Import(TestPaymentConfig.class)
 class PaymentExceptionHandlerTest {
 
     @Autowired
@@ -51,7 +49,7 @@ class PaymentExceptionHandlerTest {
                        "paymentKey": "sample-key",
                        "orderId": "order-123",
                        "amount": 10000
-                   }
+                }
                 """)).andRespond(
                 withStatus(HttpStatus.UNAUTHORIZED).contentType(MediaType.APPLICATION_JSON)
                     .body(errorResponseBody));
@@ -97,4 +95,3 @@ class PaymentExceptionHandlerTest {
 
     }
 }
-
