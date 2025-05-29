@@ -18,12 +18,12 @@ public class PaymentConfig {
     private String secretKey;
 
     @Bean
-    public TossPaymentWithRestClient tossPaymentWithRestClient() {
-        return new TossPaymentWithRestClient(RestClient.builder()
-            .baseUrl("https://api.tosspayments.com/v1/payments")
-            .defaultHeader(AUTHORIZATION_HEADER, AUTHORIZATION_SCHEME + encodeSecretKey())
-            .defaultStatusHandler(new PaymentExceptionHandler())
-            .build());
+    public TossPaymentWithRestClient tossPaymentWithRestClient(RestClient.Builder builder) {
+        return new TossPaymentWithRestClient(
+            builder.baseUrl("https://api.tosspayments.com/v1/payments")
+                .defaultHeader(AUTHORIZATION_HEADER, AUTHORIZATION_SCHEME + encodeSecretKey())
+                .defaultStatusHandler(new PaymentExceptionHandler())
+                .build());
     }
 
     private String encodeSecretKey() {

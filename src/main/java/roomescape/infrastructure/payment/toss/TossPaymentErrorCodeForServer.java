@@ -2,7 +2,6 @@ package roomescape.infrastructure.payment.toss;
 
 import java.util.Arrays;
 import java.util.Optional;
-import roomescape.common.exception.PaymentServerException;
 
 public enum TossPaymentErrorCodeForServer {
     INVALID_API_KEY("잘못된 시크릿키 연동 정보 입니다."),
