@@ -1,4 +1,4 @@
-package roomescape.common.exception;
+package roomescape.common.exception.handler;
 
 import java.util.zip.DataFormatException;
 import org.slf4j.Logger;
@@ -8,6 +8,13 @@ import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 import org.springframework.web.servlet.resource.NoResourceFoundException;
+import roomescape.common.exception.DuplicatedException;
+import roomescape.common.exception.NotFoundException;
+import roomescape.common.exception.OperationNotAllowedException;
+import roomescape.common.exception.PaymentClientException;
+import roomescape.common.exception.PaymentServerException;
+import roomescape.common.exception.ResourceInUseException;
+import roomescape.common.exception.UnauthorizedException;
 
 @RestControllerAdvice
 public class RoomescapeExceptionHandler {
