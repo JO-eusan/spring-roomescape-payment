@@ -31,7 +31,7 @@ class PaymentExceptionHandlerTest {
     @Autowired
     TossPaymentWithRestClient tossPaymentWithRestClient;
 
-    @DisplayName("토스의 클라이언트 에러를 내부의 에러로 변환해 서버 에러를 발생시킨다")
+    @DisplayName("토스의 클라이언트 에러는 PaymentClientException을 발생시킨다")
     @Test
     void test1() {
         // given
@@ -59,19 +59,19 @@ class PaymentExceptionHandlerTest {
             10000L);
         assertThatThrownBy(
             () -> tossPaymentWithRestClient.requestConfirmation(requestDto)).isInstanceOf(
-            PaymentServerException.class);
+            PaymentClientException.class);
 
     }
 
-    @DisplayName("토스의 클라이언트 에러를 내부의 에러로 변환해 클라이언트 에러를 발생시킨다")
+    @DisplayName("토스의 서버 에러는 PaymentServerException을 발생시킨다")
     @Test
     void test2() {
         // given
-        String errorCode = "ALREADY_PROCESSED_PAYMENT";
+        String errorCode = "FAILED_PAYMENT_INTERNAL_SYSTEM_PROCESSING";
         String errorResponseBody = """
                 {
-                  "code": "ALREADY_PROCESSED_PAYMENT",
-                  "message": "이미 처리된 결제 입니다."
+                  "code": "FAILED_PAYMENT_INTERNAL_SYSTEM_PROCESSING",
+                  "message": "결제가 완료되지 않았어요. 다시 시도해주세요."
                 }
             """.formatted(errorCode);
 
@@ -83,7 +83,7 @@ class PaymentExceptionHandlerTest {
                        "amount": 10000
                    }
                 """)).andRespond(
-                withStatus(HttpStatus.BAD_REQUEST).contentType(MediaType.APPLICATION_JSON)
+                withStatus(HttpStatus.INTERNAL_SERVER_ERROR).contentType(MediaType.APPLICATION_JSON)
                     .body(errorResponseBody));
 
         // when & then
@@ -91,7 +91,7 @@ class PaymentExceptionHandlerTest {
             10000L);
         assertThatThrownBy(
             () -> tossPaymentWithRestClient.requestConfirmation(requestDto)).isInstanceOf(
-            PaymentClientException.class);
+            PaymentServerException.class);
 
     }
 }

@@ -40,7 +40,7 @@ public class RoomescapeExceptionHandler {
     @ResponseStatus(HttpStatus.INTERNAL_SERVER_ERROR)
     public String handlePaymentServerException(Exception ex) {
         logger.error(ex.getMessage(), ex);
-        return "결제 승인 중 서버 내부에서 알 수 없는 문제가 발생했습니다.";
+        return String.format("결제 승인 중 서버 내부문제가 발생했습니다.(%s)", ex.getMessage());
     }
 
     @ExceptionHandler(PaymentClientException.class)

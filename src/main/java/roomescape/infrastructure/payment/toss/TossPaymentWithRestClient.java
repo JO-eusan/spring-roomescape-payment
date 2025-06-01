@@ -13,9 +13,7 @@ public class TossPaymentWithRestClient implements TossPaymentWithHttpClient {
         this.restClient = restClient;
     }
 
-    public TossPaymentConfirmResponseDto requestConfirmation(
-        TossPaymentConfirmDto tossPaymentConfirmDto) {
-
+    public TossPaymentConfirmResponseDto requestConfirmation(TossPaymentConfirmDto tossPaymentConfirmDto) {
         return restClient.post()
             .uri("/confirm")
             .body(tossPaymentConfirmDto)
