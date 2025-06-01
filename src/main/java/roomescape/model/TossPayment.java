@@ -7,9 +7,11 @@ import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.OneToOne;
+import lombok.Getter;
 import lombok.NoArgsConstructor;
 
 @Entity
+@Getter
 @NoArgsConstructor
 public class TossPayment {
 
@@ -24,16 +26,16 @@ public class TossPayment {
     private String orderId;
 
     @Column(nullable = false)
-    private Long amount;
+    private String status;
 
     @OneToOne
     @JoinColumn(name = "reservation_ticket_id", nullable = false)
     private ReservationTicket reservationTicket;
 
-    public TossPayment(String paymentKey, String orderId, Long amount, ReservationTicket reservationTicket) {
+    public TossPayment(String paymentKey, String orderId, String status, ReservationTicket reservationTicket) {
         this.paymentKey = paymentKey;
         this.orderId = orderId;
-        this.amount = amount;
+        this.status = status;
         this.reservationTicket = reservationTicket;
     }
 }

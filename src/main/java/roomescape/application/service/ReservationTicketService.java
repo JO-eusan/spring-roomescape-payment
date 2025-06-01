@@ -5,14 +5,22 @@ import java.util.List;
 import java.util.Optional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+import roomescape.common.exception.DuplicatedException;
 import roomescape.dto.LoginMember;
 import roomescape.dto.request.ReservationSearchDto;
+import roomescape.dto.request.ReservationTicketRegisterDto;
 import roomescape.dto.response.MemberReservationResponseDto;
 import roomescape.dto.response.ReservationTicketResponseDto;
+import roomescape.model.Member;
 import roomescape.model.Reservation;
 import roomescape.model.ReservationTicket;
+import roomescape.model.ReservationTime;
+import roomescape.model.Theme;
 import roomescape.model.Waiting;
+import roomescape.persistence.repository.MemberRepository;
 import roomescape.persistence.repository.ReservationTicketRepository;
+import roomescape.persistence.repository.ReservationTimeRepository;
+import roomescape.persistence.repository.ThemeRepository;
 import roomescape.persistence.repository.WaitingRepository;
 import roomescape.persistence.vo.Period;
 
@@ -21,6 +29,9 @@ import roomescape.persistence.vo.Period;
 public class ReservationTicketService {
 
     private final ReservationTicketRepository reservationTicketRepository;
+    private final ReservationTimeRepository reservationTimeRepository;
+    private final ThemeRepository themeRepository;
+    private final MemberRepository memberRepository;
     private final WaitingRepository waitingRepository;
 
     public List<ReservationTicketResponseDto> getAllReservations() {
@@ -52,6 +63,37 @@ public class ReservationTicketService {
             ).stream()
             .map(ReservationTicketResponseDto::new)
             .toList();
+    }
+
+    public ReservationTicketResponseDto saveReservation(
+        ReservationTicketRegisterDto reservationTicketRegisterDto,
+        LoginMember loginMember) {
+
+        ReservationTicket reservationTicket = createReservation(reservationTicketRegisterDto,
+            loginMember);
+        assertReservationIsNotDuplicated(reservationTicket);
+
+        return new ReservationTicketResponseDto(
+            reservationTicketRepository.save(reservationTicket));
+    }
+
+    private ReservationTicket createReservation(
+        ReservationTicketRegisterDto reservationTicketRegisterDto,
+        LoginMember loginMember) {
+        ReservationTime time = reservationTimeRepository.findById(
+            reservationTicketRegisterDto.timeId());
+        Theme theme = themeRepository.findById(reservationTicketRegisterDto.themeId());
+        Member member = memberRepository.findById(loginMember.id());
+
+        return reservationTicketRegisterDto.convertToReservation(time, theme, member);
+    }
+
+    private void assertReservationIsNotDuplicated(ReservationTicket reservationTicket) {
+        if (reservationTicketRepository.isDuplicatedForDateAndReservationTime(
+            reservationTicket.getDate(),
+            reservationTicket.getReservationTime())) {
+            throw new DuplicatedException("이미 예약이 존재합니다.");
+        }
     }
 
     public void cancelReservation(Long id) {

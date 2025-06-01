@@ -1,7 +1,10 @@
 package roomescape.application.service;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.junit.jupiter.api.Assertions.assertAll;
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.Mockito.when;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
@@ -13,9 +16,13 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.annotation.DirtiesContext;
+import roomescape.common.exception.DuplicatedException;
 import roomescape.dto.LoginMember;
+import roomescape.dto.request.ReservationTicketRegisterDto;
+import roomescape.dto.request.TossPaymentConfirmDto;
 import roomescape.dto.response.MemberReservationResponseDto;
 import roomescape.dto.response.ReservationTicketResponseDto;
+import roomescape.dto.response.TossPaymentConfirmResponseDto;
 import roomescape.infrastructure.db.MemberJpaRepository;
 import roomescape.infrastructure.db.ThemeJpaRepository;
 import roomescape.infrastructure.db.WaitingJpaRepository;
@@ -50,6 +57,76 @@ class ReservationTicketServiceTest {
 
     @Autowired
     private ThemeJpaRepository themeJpaRepository;
+
+    @DisplayName("예약을 정상적으로 저장한다.")
+    @Test
+    void test1() {
+        // given
+        Member member = saveMember(1L);
+        Theme theme = saveTheme(1L);
+        ReservationTime time = saveTime(LocalTime.of(10, 0));
+        LocalDate date = LocalDate.now().plusDays(1);
+
+        LoginMember loginMember = new LoginMember(member.getId(), member.getName(),
+            member.getEmail(), member.getRole());
+        ReservationTicketRegisterDto request = new ReservationTicketRegisterDto(date.toString(),
+            time.getId(), theme.getId(), "paymentKey", "orderId", 1000L);
+
+        // when
+        reservationTicketService.saveReservation(request, loginMember);
+
+        // then
+        assertThat(reservationTicketRepository.findAll()).hasSize(1);
+    }
+
+    @DisplayName("이미 존재하는 예약 시간에 예약한다면 예외를 던진다")
+    @Test
+    void test4() {
+        // given
+        Member member = saveMember(1L);
+        Theme theme = saveTheme(1L);
+        ReservationTime time = saveTime(LocalTime.of(10, 0));
+        LocalDate date = LocalDate.now().plusDays(1);
+
+        LoginMember loginMember = new LoginMember(member.getId(), member.getName(),
+            member.getEmail(), member.getRole());
+        ReservationTicketRegisterDto request = new ReservationTicketRegisterDto(date.toString(),
+            time.getId(), theme.getId(), "paymentKey", "orderId", 1000L);
+
+        Reservation reservation = new Reservation(
+            date,
+            time,
+            theme,
+            member,
+            LocalDate.now()
+        );
+        reservationTicketRepository.save(new ReservationTicket(reservation));
+
+        // when && then
+        assertThatThrownBy(
+            () -> reservationTicketService.saveReservation(request, loginMember))
+            .isInstanceOf(DuplicatedException.class);
+    }
+
+    @DisplayName("당일 예약을 한다면 예외를 던진다")
+    @Test
+    void test5() {
+        // given
+        Member member = saveMember(1L);
+        Theme theme = saveTheme(1L);
+        ReservationTime time = saveTime(LocalTime.of(10, 0));
+        LocalDate date = LocalDate.now();
+
+        LoginMember loginMember = new LoginMember(member.getId(), member.getName(),
+            member.getEmail(), member.getRole());
+        ReservationTicketRegisterDto request = new ReservationTicketRegisterDto(date.toString(),
+            time.getId(), theme.getId(), "paymentKey", "orderId", 1000L);
+
+        // when && then
+        assertThatThrownBy(
+            () -> reservationTicketService.saveReservation(request, loginMember))
+            .isInstanceOf(IllegalStateException.class);
+    }
 
     @DisplayName("예약을 취소한다")
     @Test

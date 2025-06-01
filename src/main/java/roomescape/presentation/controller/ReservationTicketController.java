@@ -14,7 +14,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 import roomescape.application.service.ReservationTicketService;
-import roomescape.application.service.TossPaymentService;
+import roomescape.application.service.coordinator.ReservationPaymentService;
 import roomescape.dto.LoginMember;
 import roomescape.dto.request.ReservationSearchDto;
 import roomescape.dto.request.ReservationTicketRegisterDto;
@@ -26,7 +26,7 @@ import roomescape.dto.response.ReservationTicketResponseDto;
 public class ReservationTicketController {
 
     private final ReservationTicketService reservationTicketService;
-    private final TossPaymentService tossPaymentService;
+    private final ReservationPaymentService reservationPaymentService;
 
     @GetMapping
     @ResponseStatus(HttpStatus.OK)
@@ -47,7 +47,8 @@ public class ReservationTicketController {
         @RequestBody @Valid ReservationTicketRegisterDto reservationTicketRegisterDto,
         LoginMember loginMember) {
 
-        return tossPaymentService.saveReservation(reservationTicketRegisterDto, loginMember);
+        return reservationPaymentService.saveReservationWithPayment(
+            reservationTicketRegisterDto, loginMember);
     }
 
     @DeleteMapping("/{id}")
