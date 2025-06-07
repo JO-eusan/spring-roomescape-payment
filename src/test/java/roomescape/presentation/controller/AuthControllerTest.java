@@ -14,7 +14,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 import roomescape.application.service.AuthService;
 import roomescape.dto.request.LoginRequestDto;
-import roomescape.dto.response.TokenResponseDto;
+import roomescape.dto.response.TokenResponse;
 import roomescape.presentation.support.CookieUtils;
 
 @WebMvcTest({AuthController.class, CookieUtils.class})
@@ -38,7 +38,7 @@ public class AuthControllerTest {
 
         // when
         String token = "exampleToken";
-        Mockito.when(authService.createToken(email)).thenReturn(new TokenResponseDto(token));
+        Mockito.when(authService.createToken(email)).thenReturn(new TokenResponse(token));
 
         // then
         mockMvc.perform(post("/login")

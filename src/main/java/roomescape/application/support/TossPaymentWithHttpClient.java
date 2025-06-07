@@ -1,10 +1,10 @@
 package roomescape.application.support;
 
 import roomescape.dto.request.TossPaymentConfirmDto;
-import roomescape.dto.response.TossPaymentConfirmResponseDto;
+import roomescape.dto.response.TossPaymentResponse;
 
 public interface TossPaymentWithHttpClient {
 
-    TossPaymentConfirmResponseDto requestConfirmation(TossPaymentConfirmDto tossPaymentConfirmDto);
+    TossPaymentResponse requestConfirmation(TossPaymentConfirmDto tossPaymentConfirmDto);
 
 }

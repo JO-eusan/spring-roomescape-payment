@@ -4,7 +4,7 @@ import java.util.List;
 import java.util.stream.Collectors;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
-import roomescape.dto.response.MemberResponseDto;
+import roomescape.dto.response.MemberResponse;
 import roomescape.infrastructure.db.MemberJpaRepository;
 
 @Service
@@ -13,9 +13,9 @@ public class MemberService {
 
     private final MemberJpaRepository memberJpaRepository;
 
-    public List<MemberResponseDto> findAll() {
+    public List<MemberResponse> findAll() {
         return memberJpaRepository.findAll().stream()
-                .map(MemberResponseDto::new)
+                .map(MemberResponse::from)
                 .collect(Collectors.toList());
     }
 }

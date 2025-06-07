@@ -12,7 +12,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.annotation.DirtiesContext;
 import roomescape.application.service.ReservationTicketService;
-import roomescape.dto.response.MemberReservationResponseDto;
+import roomescape.dto.response.UserReservationResponse;
 import roomescape.infrastructure.db.MemberJpaRepository;
 import roomescape.infrastructure.db.ReservationTicketJpaRepository;
 import roomescape.infrastructure.db.ReservationTimeJpaRepository;
@@ -67,16 +67,16 @@ class MemberReservationTicketAcceptanceTest {
         String token = jjwtJwtTokenProvider.createToken(savedMember.getEmail());
 
         //when
-        List<MemberReservationResponseDto> responses = RestAssured.given().log().all()
+        List<UserReservationResponse> responses = RestAssured.given().log().all()
                 .cookie("token", token)
                 .when().get("/reservations-mine")
                 .then().log().all()
                 .statusCode(200).extract()
-                .jsonPath().getList(".", MemberReservationResponseDto.class);
+                .jsonPath().getList(".", UserReservationResponse.class);
 
         //then
-        List<MemberReservationResponseDto> comparedResponse = List.of(
-                new MemberReservationResponseDto(savedReservationTicket));
+        List<UserReservationResponse> comparedResponse = List.of(
+                UserReservationResponse.from(savedReservationTicket));
 
         assertAll(
                 () -> assertThat(responses).hasSize(1),

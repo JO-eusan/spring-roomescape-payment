@@ -5,8 +5,8 @@ import org.springframework.stereotype.Service;
 import roomescape.application.provider.JwtTokenProvider;
 import roomescape.common.exception.UnauthorizedException;
 import roomescape.dto.request.LoginRequestDto;
-import roomescape.dto.response.MemberResponseDto;
-import roomescape.dto.response.TokenResponseDto;
+import roomescape.dto.response.MemberResponse;
+import roomescape.dto.response.TokenResponse;
 import roomescape.model.Member;
 import roomescape.persistence.repository.MemberRepository;
 
@@ -25,16 +25,16 @@ public class AuthService {
         }
     }
 
-    public TokenResponseDto createToken(String email) {
+    public TokenResponse createToken(String email) {
         String token = jwtTokenProvider.createToken(email);
-        return new TokenResponseDto(token);
+        return new TokenResponse(token);
     }
 
-    public MemberResponseDto getMemberByToken(String tokenFromCookie) {
+    public MemberResponse getMemberByToken(String tokenFromCookie) {
         String payload = jwtTokenProvider.getPayload(tokenFromCookie);
         Member member = memberRepository.findByEmail(payload);
 
-        return new MemberResponseDto(member);
+        return MemberResponse.from(member);
     }
 
     public Member getAuthenticatedMember(String tokenFromCookie) {

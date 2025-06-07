@@ -9,7 +9,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.test.annotation.DirtiesContext;
-import roomescape.dto.response.MemberResponseDto;
+import roomescape.dto.response.MemberResponse;
 import roomescape.model.Role;
 import roomescape.infrastructure.jwt.JjwtJwtTokenProvider;
 
@@ -37,15 +37,15 @@ public class AuthAcceptanceTest {
                 , name, email, "password", Role.ADMIN.name());
 
         // when
-        MemberResponseDto memberResponseDto = RestAssured.given().log().all()
+        MemberResponse memberResponse = RestAssured.given().log().all()
                 .contentType(ContentType.JSON)
                 .cookie("token", token)
                 .when().get("/login/check")
                 .then().log().all()
                 .statusCode(200)
-                .extract().as(MemberResponseDto.class);
+                .extract().as(MemberResponse.class);
 
         // then
-        assertThat(memberResponseDto.name()).isEqualTo(name);
+        assertThat(memberResponse.name()).isEqualTo(name);
     }
 }

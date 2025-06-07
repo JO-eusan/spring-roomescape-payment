@@ -8,7 +8,7 @@ import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.annotation.DirtiesContext;
-import roomescape.dto.response.MemberResponseDto;
+import roomescape.dto.response.MemberResponse;
 import roomescape.model.Role;
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.DEFINED_PORT)
@@ -19,11 +19,11 @@ public class MemberAcceptanceTest {
     @DisplayName("저장된 멤버 전체를 조회한다")
     void test1() {
         // when
-        List<MemberResponseDto> responseDtos = RestAssured.given().log().all()
+        List<MemberResponse> responseDtos = RestAssured.given().log().all()
                 .when().get("/members")
                 .then().log().all()
                 .statusCode(200).extract()
-                .jsonPath().getList(".", MemberResponseDto.class);
+                .jsonPath().getList(".", MemberResponse.class);
 
         // then
         assertAll(

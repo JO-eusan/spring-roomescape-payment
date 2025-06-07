@@ -43,10 +43,6 @@ public class Waiting {
         return reservation.getMember().getId().equals(comparedMember.getId());
     }
 
-    public String getThemeName() {
-        return this.reservation.getTheme().getName();
-    }
-
     public LocalDate getReservationDate() {
         return this.reservation.getDate();
     }

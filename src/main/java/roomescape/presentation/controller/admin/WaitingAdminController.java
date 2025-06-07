@@ -10,7 +10,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 import roomescape.application.service.WaitingAdminService;
-import roomescape.dto.response.WaitingAdminResponseDto;
+import roomescape.dto.response.WaitingResponse;
 
 @RestController
 @RequestMapping("/admin/waitings")
@@ -21,7 +21,7 @@ public class WaitingAdminController {
 
     @GetMapping
     @ResponseStatus(HttpStatus.OK)
-    public List<WaitingAdminResponseDto> getWaitings() {
+    public List<WaitingResponse> getWaitings() {
         return waitingAdminService.getAllWaitings();
     }
 

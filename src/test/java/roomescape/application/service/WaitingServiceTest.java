@@ -20,7 +20,7 @@ import roomescape.common.exception.NotFoundException;
 import roomescape.common.exception.UnauthorizedException;
 import roomescape.dto.LoginMember;
 import roomescape.dto.request.WaitingRegisterDto;
-import roomescape.dto.response.MemberWaitingResponseDto;
+import roomescape.dto.response.UserWaitingResponse;
 import roomescape.infrastructure.db.MemberJpaRepository;
 import roomescape.infrastructure.db.ReservationTicketJpaRepository;
 import roomescape.infrastructure.db.ReservationTimeJpaRepository;
@@ -278,11 +278,11 @@ public class WaitingServiceTest {
             ));
 
             // when
-            List<MemberWaitingResponseDto> myWaitings = waitingService.getMyWaitings(loginMember);
+            List<UserWaitingResponse> myWaitings = waitingService.getMyWaitings(loginMember);
 
             // then
             List<Long> waitingIds = myWaitings.stream()
-                    .map(MemberWaitingResponseDto::id)
+                    .map(UserWaitingResponse::id)
                     .toList();
 
             assertThat(waitingIds).doesNotContain(anotherWaiting.getId());
@@ -325,7 +325,7 @@ public class WaitingServiceTest {
             ));
 
             // when
-            List<MemberWaitingResponseDto> myWaitings = waitingService.getMyWaitings(loginMember);
+            List<UserWaitingResponse> myWaitings = waitingService.getMyWaitings(loginMember);
 
             // then
             assertThat(myWaitings.getFirst().order()).isEqualTo(2);

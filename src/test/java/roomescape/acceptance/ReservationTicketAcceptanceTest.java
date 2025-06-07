@@ -28,8 +28,8 @@ import org.springframework.test.annotation.DirtiesContext;
 import org.springframework.test.annotation.DirtiesContext.ClassMode;
 import org.springframework.test.context.bean.override.mockito.MockitoBean;
 import roomescape.dto.request.TossPaymentConfirmDto;
-import roomescape.dto.response.ReservationTicketResponseDto;
-import roomescape.dto.response.TossPaymentConfirmResponseDto;
+import roomescape.dto.response.ReservationTicketResponse;
+import roomescape.dto.response.TossPaymentResponse;
 import roomescape.infrastructure.payment.toss.TossPaymentWithRestClient;
 import roomescape.infrastructure.jwt.JjwtJwtTokenProvider;
 import roomescape.model.Role;
@@ -66,12 +66,12 @@ class ReservationTicketAcceptanceTest {
         insertNewReservationWithJdbcTemplate(1L, 1L);
 
         // when
-        List<ReservationTicketResponseDto> reservations = RestAssured.given().log().all()
+        List<ReservationTicketResponse> reservations = RestAssured.given().log().all()
             .cookie("token", createToken())
             .when().get("/reservations")
             .then().log().all()
             .statusCode(200).extract()
-            .jsonPath().getList(".", ReservationTicketResponseDto.class);
+            .jsonPath().getList(".", ReservationTicketResponse.class);
 
         Integer count = jdbcTemplate.queryForObject("SELECT count(1) from reservation_ticket",
             Integer.class);
@@ -189,12 +189,12 @@ class ReservationTicketAcceptanceTest {
         params.put("orderId", "orderId");
         params.put("amount", "1000");
 
-        TossPaymentConfirmResponseDto tossPaymentConfirmResponseDto = new TossPaymentConfirmResponseDto(
+        TossPaymentResponse tossPaymentResponse = new TossPaymentResponse(
             "DONE", "paymentKey", "orderId"
         );
 
         when(tossPaymentWithRestClient.requestConfirmation(any(TossPaymentConfirmDto.class)))
-            .thenReturn(tossPaymentConfirmResponseDto);
+            .thenReturn(tossPaymentResponse);
 
         // when & then
         RestAssured.given().log().all()

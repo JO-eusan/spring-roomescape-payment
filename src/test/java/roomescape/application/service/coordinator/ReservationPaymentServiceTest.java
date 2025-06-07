@@ -20,7 +20,7 @@ import roomescape.common.exception.PaymentClientException;
 import roomescape.dto.LoginMember;
 import roomescape.dto.request.ReservationTicketRegisterDto;
 import roomescape.dto.request.TossPaymentConfirmDto;
-import roomescape.dto.response.TossPaymentConfirmResponseDto;
+import roomescape.dto.response.TossPaymentResponse;
 import roomescape.infrastructure.db.MemberJpaRepository;
 import roomescape.infrastructure.db.ThemeJpaRepository;
 import roomescape.infrastructure.db.TossPaymentJpaRepository;
@@ -73,12 +73,12 @@ class ReservationPaymentServiceTest {
         ReservationTicketRegisterDto request = new ReservationTicketRegisterDto(date.toString(),
             time.getId(), theme.getId(), "paymentKey", "orderId", 1000L);
 
-        TossPaymentConfirmResponseDto tossPaymentConfirmResponseDto = new TossPaymentConfirmResponseDto(
+        TossPaymentResponse tossPaymentResponse = new TossPaymentResponse(
             "DONE", "paymentKey", "orderId"
         );
 
         when(tossPaymentWithRestClient.requestConfirmation(any(TossPaymentConfirmDto.class)))
-            .thenReturn(tossPaymentConfirmResponseDto);
+            .thenReturn(tossPaymentResponse);
 
         // when
         reservationPaymentService.saveReservationWithPayment(request, loginMember);
@@ -104,12 +104,12 @@ class ReservationPaymentServiceTest {
         ReservationTicketRegisterDto request = new ReservationTicketRegisterDto(date.toString(),
             time.getId(), theme.getId(), "paymentKey", "orderId", 1000L);
 
-        TossPaymentConfirmResponseDto tossPaymentConfirmResponseDto = new TossPaymentConfirmResponseDto(
+        TossPaymentResponse tossPaymentResponse = new TossPaymentResponse(
             "ABORTED", "paymentKey", "orderId"
         );
 
         when(tossPaymentWithRestClient.requestConfirmation(any(TossPaymentConfirmDto.class)))
-            .thenReturn(tossPaymentConfirmResponseDto);
+            .thenReturn(tossPaymentResponse);
 
         // when & then
         assertThatThrownBy(

@@ -13,7 +13,7 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.context.SpringBootTest.WebEnvironment;
 import org.springframework.test.annotation.DirtiesContext;
 import org.springframework.test.annotation.DirtiesContext.ClassMode;
-import roomescape.dto.response.WaitingAdminResponseDto;
+import roomescape.dto.response.WaitingResponse;
 import roomescape.infrastructure.db.MemberJpaRepository;
 import roomescape.infrastructure.db.ReservationTimeJpaRepository;
 import roomescape.infrastructure.db.ThemeJpaRepository;
@@ -79,11 +79,11 @@ class WaitingAdminServiceTest {
         ));
 
         // when
-        List<WaitingAdminResponseDto> actual = waitingAdminService.getAllWaitings();
+        List<WaitingResponse> actual = waitingAdminService.getAllWaitings();
 
         // then
         List<Long> ids = actual.stream()
-                .map(WaitingAdminResponseDto::id)
+                .map(WaitingResponse::id)
                 .toList();
 
         assertAll(

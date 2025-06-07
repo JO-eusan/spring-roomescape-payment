@@ -11,7 +11,7 @@ import org.springframework.boot.test.context.SpringBootTest.WebEnvironment;
 import org.springframework.test.annotation.DirtiesContext;
 import org.springframework.test.annotation.DirtiesContext.ClassMode;
 import roomescape.dto.request.ThemeRegisterDto;
-import roomescape.dto.response.ThemeResponseDto;
+import roomescape.dto.response.ThemeResponse;
 import roomescape.model.Theme;
 import roomescape.persistence.repository.MemberRepository;
 import roomescape.persistence.repository.ReservationTicketRepository;
@@ -42,10 +42,10 @@ class ThemeServiceTest {
     void test1() {
 
         //when
-        List<ThemeResponseDto> responses = themeService.getAllThemes();
+        List<ThemeResponse> responses = themeService.getAllThemes();
 
         List<String> actual = responses.stream()
-                .map(ThemeResponseDto::name)
+                .map(ThemeResponse::name)
                 .toList();
 
         //then
@@ -77,7 +77,7 @@ class ThemeServiceTest {
         ThemeRegisterDto themeRegisterDto = new ThemeRegisterDto(name, description, thumbnail);
 
         // when
-        ThemeResponseDto actual = themeService.saveTheme(themeRegisterDto);
+        ThemeResponse actual = themeService.saveTheme(themeRegisterDto);
 
         // then
         assertAll(

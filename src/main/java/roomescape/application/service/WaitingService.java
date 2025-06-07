@@ -1,5 +1,7 @@
 package roomescape.application.service;
 
+import static java.util.stream.Collectors.toList;
+
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.List;
@@ -11,8 +13,8 @@ import roomescape.common.exception.OperationNotAllowedException;
 import roomescape.common.exception.UnauthorizedException;
 import roomescape.dto.LoginMember;
 import roomescape.dto.request.WaitingRegisterDto;
-import roomescape.dto.response.MemberWaitingResponseDto;
-import roomescape.dto.response.WaitingResponseDto;
+import roomescape.dto.response.UserWaitingResponse;
+import roomescape.dto.response.WaitingResponse;
 import roomescape.model.Member;
 import roomescape.model.Reservation;
 import roomescape.model.ReservationTicket;
@@ -36,7 +38,7 @@ public class WaitingService {
     private final ReservationTicketRepository reservationTicketRepository;
 
     @Transactional
-    public WaitingResponseDto registerWaiting(LoginMember loginMember,
+    public WaitingResponse registerWaiting(LoginMember loginMember,
         WaitingRegisterDto waitingRegisterDto) {
         Member member = memberRepository.findById(loginMember.id());
         ReservationTime reservationTime = reservationTimeRepository.findById(
@@ -57,7 +59,7 @@ public class WaitingService {
 
         Waiting savedWaiting = waitingRepository.save(waiting);
 
-        return new WaitingResponseDto(savedWaiting.getId());
+        return WaitingResponse.from(savedWaiting);
     }
 
     private void validateReservationExistsForWaiting(Reservation reservation) {
@@ -81,14 +83,12 @@ public class WaitingService {
         waitingRepository.delete(waiting);
     }
 
-    public List<MemberWaitingResponseDto> getMyWaitings(LoginMember loginMember) {
+    public List<UserWaitingResponse> getMyWaitings(LoginMember loginMember) {
         List<Waiting> myWaitings = waitingRepository.findForMember(loginMember.id());
 
         return myWaitings.stream()
-            .map(waiting -> {
-                int count = waitingRepository.countWaitingBefore(waiting);
-                return new MemberWaitingResponseDto(waiting, count + 1);
-            })
+            .map(waiting -> UserWaitingResponse.from(waiting,
+                waitingRepository.countWaitingBefore(waiting) + 1L))
             .toList();
     }
 }

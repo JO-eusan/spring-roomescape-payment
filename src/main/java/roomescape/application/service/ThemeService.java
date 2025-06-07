@@ -9,7 +9,7 @@ import org.springframework.stereotype.Service;
 import roomescape.common.exception.DuplicatedException;
 import roomescape.common.exception.ResourceInUseException;
 import roomescape.dto.request.ThemeRegisterDto;
-import roomescape.dto.response.ThemeResponseDto;
+import roomescape.dto.response.ThemeResponse;
 import roomescape.model.Theme;
 import roomescape.persistence.repository.ReservationTicketRepository;
 import roomescape.persistence.repository.ThemeRepository;
@@ -25,19 +25,19 @@ public class ThemeService {
     private final ThemeRepository themeRepository;
     private final ReservationTicketRepository reservationTicketRepository;
 
-    public List<ThemeResponseDto> getAllThemes() {
+    public List<ThemeResponse> getAllThemes() {
         return themeRepository.findAll().stream()
-                .map(ThemeResponseDto::new)
+                .map(ThemeResponse::from)
                 .collect(Collectors.toList());
     }
 
-    public ThemeResponseDto saveTheme(ThemeRegisterDto themeRegisterDto) {
+    public ThemeResponse saveTheme(ThemeRegisterDto themeRegisterDto) {
         validateTheme(themeRegisterDto);
 
         Theme theme = themeRegisterDto.convertToTheme();
         Theme savedTheme = themeRepository.save(theme);
 
-        return new ThemeResponseDto(
+        return new ThemeResponse(
                 savedTheme.getId(),
                 savedTheme.getName(),
                 savedTheme.getDescription(),
@@ -60,12 +60,12 @@ public class ThemeService {
         }
     }
 
-    public List<ThemeResponseDto> findPopularThemes(String date) {
+    public List<ThemeResponse> findPopularThemes(String date) {
         LocalDate parsedDate = LocalDate.parse(date);
         Period period = new Period(parsedDate, parsedDate.minusDays(POPULAR_DAY_RANGE));
 
         return themeRepository.findPopularThemesInPeriod(period, POPULAR_THEME_SIZE).stream()
-                .map(theme -> new ThemeResponseDto(
+                .map(theme -> new ThemeResponse(
                         theme.getId(),
                         theme.getName(),
                         theme.getDescription(),

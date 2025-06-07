@@ -9,8 +9,8 @@ import roomescape.common.exception.DuplicatedException;
 import roomescape.dto.LoginMember;
 import roomescape.dto.request.ReservationSearchDto;
 import roomescape.dto.request.ReservationTicketRegisterDto;
-import roomescape.dto.response.MemberReservationResponseDto;
-import roomescape.dto.response.ReservationTicketResponseDto;
+import roomescape.dto.response.UserReservationResponse;
+import roomescape.dto.response.ReservationTicketResponse;
 import roomescape.model.Member;
 import roomescape.model.Reservation;
 import roomescape.model.ReservationTicket;
@@ -34,22 +34,22 @@ public class ReservationTicketService {
     private final MemberRepository memberRepository;
     private final WaitingRepository waitingRepository;
 
-    public List<ReservationTicketResponseDto> getAllReservations() {
+    public List<ReservationTicketResponse> getAllReservations() {
         return reservationTicketRepository.findAll().stream()
-            .map(ReservationTicketResponseDto::new)
+            .map(ReservationTicketResponse::from)
             .toList();
     }
 
-    public List<MemberReservationResponseDto> getReservationsOfMember(LoginMember loginMember) {
+    public List<UserReservationResponse> getReservationsOfMember(LoginMember loginMember) {
         List<ReservationTicket> reservationTickets = reservationTicketRepository.findForMember(
             loginMember.id());
 
         return reservationTickets.stream()
-            .map(MemberReservationResponseDto::new)
+            .map(UserReservationResponse::from)
             .toList();
     }
 
-    public List<ReservationTicketResponseDto> searchReservations(
+    public List<ReservationTicketResponse> searchReservations(
         ReservationSearchDto reservationSearchDto) {
         Long themeId = reservationSearchDto.themeId();
         Long memberId = reservationSearchDto.memberId();
@@ -61,11 +61,11 @@ public class ReservationTicketService {
                 memberId,
                 new Period(startDate, endDate)
             ).stream()
-            .map(ReservationTicketResponseDto::new)
+            .map(ReservationTicketResponse::from)
             .toList();
     }
 
-    public ReservationTicketResponseDto saveReservation(
+    public ReservationTicketResponse saveReservation(
         ReservationTicketRegisterDto reservationTicketRegisterDto,
         LoginMember loginMember) {
 
@@ -73,7 +73,7 @@ public class ReservationTicketService {
             loginMember);
         assertReservationIsNotDuplicated(reservationTicket);
 
-        return new ReservationTicketResponseDto(
+        return ReservationTicketResponse.from(
             reservationTicketRepository.save(reservationTicket));
     }
 

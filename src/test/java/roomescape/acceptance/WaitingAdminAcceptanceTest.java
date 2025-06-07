@@ -15,7 +15,7 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.web.server.LocalServerPort;
 import org.springframework.test.annotation.DirtiesContext;
 import roomescape.application.provider.JwtTokenProvider;
-import roomescape.dto.response.WaitingAdminResponseDto;
+import roomescape.dto.response.WaitingResponse;
 import roomescape.infrastructure.db.MemberJpaRepository;
 import roomescape.infrastructure.db.ReservationTimeJpaRepository;
 import roomescape.infrastructure.db.ThemeJpaRepository;
@@ -101,17 +101,17 @@ public class WaitingAdminAcceptanceTest {
 
         // when
         RestAssured.port = port;
-        List<WaitingAdminResponseDto> actual = RestAssured.given().log().all()
+        List<WaitingResponse> actual = RestAssured.given().log().all()
                 .contentType(ContentType.JSON)
                 .cookie("token", jwtTokenProvider.createToken(emailOfAdministrator))
                 .when().get("/admin/waitings")
                 .then().log().all()
                 .statusCode(200).extract()
-                .jsonPath().getList(".", WaitingAdminResponseDto.class);
+                .jsonPath().getList(".", WaitingResponse.class);
 
         // then
         List<Long> ids = actual.stream()
-                .map(WaitingAdminResponseDto::id)
+                .map(WaitingResponse::id)
                 .toList();
 
         assertAll(

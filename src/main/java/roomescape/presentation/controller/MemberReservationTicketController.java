@@ -9,7 +9,7 @@ import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 import roomescape.application.service.ReservationTicketService;
 import roomescape.dto.LoginMember;
-import roomescape.dto.response.MemberReservationResponseDto;
+import roomescape.dto.response.UserReservationResponse;
 
 @RestController
 @RequestMapping("/reservations-mine")
@@ -20,7 +20,7 @@ public class MemberReservationTicketController {
 
     @GetMapping
     @ResponseStatus(HttpStatus.OK)
-    public List<MemberReservationResponseDto> getMemberReservations(LoginMember loginMember) {
+    public List<UserReservationResponse> getMemberReservations(LoginMember loginMember) {
         return reservationTicketService.getReservationsOfMember(loginMember);
     }
 }

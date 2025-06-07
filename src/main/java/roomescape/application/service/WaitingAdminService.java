@@ -4,7 +4,7 @@ import java.util.List;
 import java.util.stream.Collectors;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
-import roomescape.dto.response.WaitingAdminResponseDto;
+import roomescape.dto.response.WaitingResponse;
 import roomescape.persistence.repository.WaitingRepository;
 
 @Service
@@ -13,9 +13,9 @@ public class WaitingAdminService {
 
     private final WaitingRepository waitingRepository;
 
-    public List<WaitingAdminResponseDto> getAllWaitings() {
+    public List<WaitingResponse> getAllWaitings() {
         return waitingRepository.findAll().stream()
-                .map(WaitingAdminResponseDto::new)
+                .map(WaitingResponse::from)
                 .collect(Collectors.toList());
     }
 

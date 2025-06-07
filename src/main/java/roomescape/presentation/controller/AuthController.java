@@ -13,8 +13,8 @@ import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 import roomescape.application.service.AuthService;
 import roomescape.dto.request.LoginRequestDto;
-import roomescape.dto.response.MemberResponseDto;
-import roomescape.dto.response.TokenResponseDto;
+import roomescape.dto.response.MemberResponse;
+import roomescape.dto.response.TokenResponse;
 import roomescape.presentation.support.CookieUtils;
 
 @RestController
@@ -29,14 +29,14 @@ public class AuthController {
     @ResponseStatus(HttpStatus.OK)
     public void login(@RequestBody @Valid LoginRequestDto loginRequestDto, HttpServletResponse httpServletResponse) {
         authService.login(loginRequestDto);
-        TokenResponseDto tokenResponseDto = authService.createToken(loginRequestDto.email());
+        TokenResponse tokenResponse = authService.createToken(loginRequestDto.email());
 
-        cookieUtils.setCookieForToken(httpServletResponse, tokenResponseDto.token());
+        cookieUtils.setCookieForToken(httpServletResponse, tokenResponse.token());
     }
 
     @GetMapping("/check")
     @ResponseStatus(HttpStatus.OK)
-    public MemberResponseDto loginCheck(HttpServletRequest httpServletRequest) {
+    public MemberResponse loginCheck(HttpServletRequest httpServletRequest) {
         String tokenFromCookie = cookieUtils.getToken(httpServletRequest);
         return authService.getMemberByToken(tokenFromCookie);
     }

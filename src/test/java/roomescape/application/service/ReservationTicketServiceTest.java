@@ -4,7 +4,6 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.junit.jupiter.api.Assertions.assertAll;
 import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.Mockito.when;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
@@ -19,10 +18,8 @@ import org.springframework.test.annotation.DirtiesContext;
 import roomescape.common.exception.DuplicatedException;
 import roomescape.dto.LoginMember;
 import roomescape.dto.request.ReservationTicketRegisterDto;
-import roomescape.dto.request.TossPaymentConfirmDto;
-import roomescape.dto.response.MemberReservationResponseDto;
-import roomescape.dto.response.ReservationTicketResponseDto;
-import roomescape.dto.response.TossPaymentConfirmResponseDto;
+import roomescape.dto.response.UserReservationResponse;
+import roomescape.dto.response.ReservationTicketResponse;
 import roomescape.infrastructure.db.MemberJpaRepository;
 import roomescape.infrastructure.db.ThemeJpaRepository;
 import roomescape.infrastructure.db.WaitingJpaRepository;
@@ -156,7 +153,7 @@ class ReservationTicketServiceTest {
         this.reservationTicketService.cancelReservation(reservationTicket.getId());
 
         // then
-        List<ReservationTicketResponseDto> reservations = this.reservationTicketService.getAllReservations();
+        List<ReservationTicketResponse> reservations = this.reservationTicketService.getAllReservations();
         assertThat(reservations).isEmpty();
     }
 
@@ -182,11 +179,11 @@ class ReservationTicketServiceTest {
         LoginMember loginMember = new LoginMember(savedMember);
 
         //when
-        List<MemberReservationResponseDto> response = reservationTicketService.getReservationsOfMember(
+        List<UserReservationResponse> response = reservationTicketService.getReservationsOfMember(
             loginMember);
 
-        List<MemberReservationResponseDto> comparedResponse = List.of(
-            new MemberReservationResponseDto(savedReservationTicket));
+        List<UserReservationResponse> comparedResponse = List.of(
+            UserReservationResponse.from(savedReservationTicket));
 
         //then
         assertAll(

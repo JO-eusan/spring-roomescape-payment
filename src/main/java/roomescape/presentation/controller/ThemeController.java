@@ -15,7 +15,7 @@ import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 import roomescape.application.service.ThemeService;
 import roomescape.dto.request.ThemeRegisterDto;
-import roomescape.dto.response.ThemeResponseDto;
+import roomescape.dto.response.ThemeResponse;
 
 @RestController
 @RequestMapping("/themes")
@@ -26,13 +26,13 @@ public class ThemeController {
 
     @GetMapping
     @ResponseStatus(HttpStatus.OK)
-    public List<ThemeResponseDto> getThemes() {
+    public List<ThemeResponse> getThemes() {
         return themeService.getAllThemes();
     }
 
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
-    public ThemeResponseDto addTheme(@RequestBody @Valid ThemeRegisterDto themeRegisterDto) {
+    public ThemeResponse addTheme(@RequestBody @Valid ThemeRegisterDto themeRegisterDto) {
         return themeService.saveTheme(themeRegisterDto);
     }
 
@@ -44,7 +44,7 @@ public class ThemeController {
 
     @GetMapping("/popular")
     @ResponseStatus(HttpStatus.OK)
-    public List<ThemeResponseDto> getPopularThemes(@RequestParam String date) {
+    public List<ThemeResponse> getPopularThemes(@RequestParam String date) {
         return themeService.findPopularThemes(date);
     }
 }

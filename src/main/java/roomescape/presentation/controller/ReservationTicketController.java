@@ -18,7 +18,7 @@ import roomescape.application.service.coordinator.ReservationPaymentService;
 import roomescape.dto.LoginMember;
 import roomescape.dto.request.ReservationSearchDto;
 import roomescape.dto.request.ReservationTicketRegisterDto;
-import roomescape.dto.response.ReservationTicketResponseDto;
+import roomescape.dto.response.ReservationTicketResponse;
 
 @RestController
 @RequestMapping("/reservations")
@@ -30,20 +30,20 @@ public class ReservationTicketController {
 
     @GetMapping
     @ResponseStatus(HttpStatus.OK)
-    public List<ReservationTicketResponseDto> getReservations() {
+    public List<ReservationTicketResponse> getReservations() {
         return reservationTicketService.getAllReservations();
     }
 
     @GetMapping("/search")
     @ResponseStatus(HttpStatus.OK)
-    public List<ReservationTicketResponseDto> getReservations(
+    public List<ReservationTicketResponse> getReservations(
         @ModelAttribute ReservationSearchDto reservationSearchDto) {
         return reservationTicketService.searchReservations(reservationSearchDto);
     }
 
     @PostMapping("/toss")
     @ResponseStatus(HttpStatus.CREATED)
-    public ReservationTicketResponseDto addReservation(
+    public ReservationTicketResponse addReservation(
         @RequestBody @Valid ReservationTicketRegisterDto reservationTicketRegisterDto,
         LoginMember loginMember) {
 

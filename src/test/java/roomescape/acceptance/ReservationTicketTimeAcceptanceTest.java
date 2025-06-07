@@ -1,5 +1,7 @@
 package roomescape.acceptance;
 
+import static org.assertj.core.api.Assertions.assertThat;
+
 import io.restassured.RestAssured;
 import io.restassured.http.ContentType;
 import java.sql.PreparedStatement;
@@ -8,7 +10,6 @@ import java.time.LocalTime;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import static org.assertj.core.api.Assertions.assertThat;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -18,7 +19,7 @@ import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.support.GeneratedKeyHolder;
 import org.springframework.jdbc.support.KeyHolder;
 import org.springframework.test.annotation.DirtiesContext;
-import roomescape.dto.response.ReservationTimeResponseDto;
+import roomescape.dto.response.ReservationTimeResponse;
 import roomescape.model.ReservationTime;
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.DEFINED_PORT)
@@ -46,11 +47,11 @@ class ReservationTicketTimeAcceptanceTest {
     @DisplayName("예약 시각 조회 시 저장된 예약 시각 내역을 모두 가져온다")
     void test1() {
         // given
-        List<ReservationTimeResponseDto> reservationTimes = RestAssured.given().log().all()
+        List<ReservationTimeResponse> reservationTimes = RestAssured.given().log().all()
                 .when().get("/times")
                 .then().log().all()
                 .statusCode(200).extract()
-                .jsonPath().getList(".", ReservationTimeResponseDto.class);
+                .jsonPath().getList(".", ReservationTimeResponse.class);
 
         Integer count = jdbcTemplate.queryForObject("SELECT count(1) from reservation_time", Integer.class);
 

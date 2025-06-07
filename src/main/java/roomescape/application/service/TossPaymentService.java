@@ -5,7 +5,7 @@ import org.springframework.stereotype.Service;
 import roomescape.application.support.TossPaymentWithHttpClient;
 import roomescape.dto.request.ReservationTicketRegisterDto;
 import roomescape.dto.request.TossPaymentConfirmDto;
-import roomescape.dto.response.TossPaymentConfirmResponseDto;
+import roomescape.dto.response.TossPaymentResponse;
 import roomescape.model.TossPayment;
 import roomescape.persistence.repository.ReservationTicketRepository;
 import roomescape.persistence.repository.TossPaymentRepository;
@@ -18,30 +18,30 @@ public class TossPaymentService {
     private final TossPaymentRepository tossPaymentRepository;
     private final TossPaymentWithHttpClient tossPaymentWithHttpClient;
 
-    public TossPaymentConfirmResponseDto savePayment(
+    public TossPaymentResponse savePayment(
         ReservationTicketRegisterDto reservationTicketRegisterDto,
         Long reservationTicketId) {
 
-        TossPaymentConfirmResponseDto tossPaymentConfirmResponseDto = tossPaymentWithHttpClient
+        TossPaymentResponse tossPaymentResponse = tossPaymentWithHttpClient
             .requestConfirmation(new TossPaymentConfirmDto(
                 reservationTicketRegisterDto.paymentKey(),
                 reservationTicketRegisterDto.orderId(),
                 reservationTicketRegisterDto.amount()
             ));
 
-        return new TossPaymentConfirmResponseDto(
+        return TossPaymentResponse.from(
             tossPaymentRepository.save(
-                createPayment(tossPaymentConfirmResponseDto, reservationTicketId)));
+                createPayment(tossPaymentResponse, reservationTicketId)));
     }
 
     private TossPayment createPayment(
-        TossPaymentConfirmResponseDto tossPaymentConfirmResponseDto,
+        TossPaymentResponse tossPaymentResponse,
         Long reservationTicketId) {
 
         return new TossPayment(
-            tossPaymentConfirmResponseDto.paymentKey(),
-            tossPaymentConfirmResponseDto.orderId(),
-            tossPaymentConfirmResponseDto.status(),
+            tossPaymentResponse.paymentKey(),
+            tossPaymentResponse.orderId(),
+            tossPaymentResponse.status(),
             reservationTicketRepository.findById(reservationTicketId)
         );
     }

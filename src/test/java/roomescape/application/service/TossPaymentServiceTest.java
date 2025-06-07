@@ -9,7 +9,6 @@ import static org.mockito.Mockito.when;
 
 import java.time.LocalDate;
 import java.time.LocalTime;
-import java.util.List;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -18,13 +17,9 @@ import org.springframework.boot.test.context.SpringBootTest.WebEnvironment;
 import org.springframework.test.annotation.DirtiesContext;
 import org.springframework.test.annotation.DirtiesContext.ClassMode;
 import org.springframework.test.context.bean.override.mockito.MockitoBean;
-import roomescape.common.exception.DuplicatedException;
-import roomescape.common.exception.PaymentClientException;
-import roomescape.dto.LoginMember;
 import roomescape.dto.request.ReservationTicketRegisterDto;
 import roomescape.dto.request.TossPaymentConfirmDto;
-import roomescape.dto.response.ReservationTicketResponseDto;
-import roomescape.dto.response.TossPaymentConfirmResponseDto;
+import roomescape.dto.response.TossPaymentResponse;
 import roomescape.infrastructure.payment.toss.TossPaymentWithRestClient;
 import roomescape.infrastructure.db.MemberJpaRepository;
 import roomescape.infrastructure.db.ThemeJpaRepository;
@@ -35,7 +30,6 @@ import roomescape.model.ReservationTicket;
 import roomescape.model.ReservationTime;
 import roomescape.model.Role;
 import roomescape.model.Theme;
-import roomescape.model.TossPayment;
 import roomescape.persistence.repository.ReservationTicketRepository;
 import roomescape.persistence.repository.ReservationTimeRepository;
 
@@ -77,12 +71,12 @@ public class TossPaymentServiceTest {
         ReservationTicketRegisterDto request = new ReservationTicketRegisterDto(date.toString(),
             time.getId(), theme.getId(), "paymentKey", "orderId", 1000L);
 
-        TossPaymentConfirmResponseDto tossPaymentConfirmResponseDto = new TossPaymentConfirmResponseDto(
+        TossPaymentResponse tossPaymentResponse = new TossPaymentResponse(
             "DONE", "paymentKey", "orderId"
         );
 
         when(tossPaymentWithRestClient.requestConfirmation(any(TossPaymentConfirmDto.class)))
-            .thenReturn(tossPaymentConfirmResponseDto);
+            .thenReturn(tossPaymentResponse);
 
         // when
         tossPaymentService.savePayment(request, reservationTicket.getId());
