@@ -1,6 +1,6 @@
 package roomescape.persistence.repository;
 
-import roomescape.model.Member;
+import roomescape.business.model.Member;
 
 public interface MemberRepository {
 

@@ -1,6 +1,6 @@
 package roomescape.dto.response;
 
-import roomescape.model.TossPayment;
+import roomescape.business.model.TossPayment;
 
 public record TossPaymentResponse(
     String status,

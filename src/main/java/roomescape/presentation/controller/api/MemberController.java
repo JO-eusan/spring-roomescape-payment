@@ -5,7 +5,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
-import roomescape.application.service.MemberService;
+import roomescape.business.service.MemberService;
 import roomescape.dto.response.MemberResponse;
 
 @RestController

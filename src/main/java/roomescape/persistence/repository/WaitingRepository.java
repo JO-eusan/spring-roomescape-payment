@@ -3,9 +3,9 @@ package roomescape.persistence.repository;
 import java.time.LocalDate;
 import java.util.List;
 import java.util.Optional;
-import roomescape.model.ReservationTime;
-import roomescape.model.Theme;
-import roomescape.model.Waiting;
+import roomescape.business.model.ReservationTime;
+import roomescape.business.model.Theme;
+import roomescape.business.model.Waiting;
 
 public interface WaitingRepository {
 

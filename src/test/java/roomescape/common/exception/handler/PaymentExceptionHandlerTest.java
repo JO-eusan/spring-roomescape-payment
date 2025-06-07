@@ -19,9 +19,9 @@ import roomescape.common.config.TestPaymentConfig;
 import roomescape.common.exception.PaymentClientException;
 import roomescape.common.exception.PaymentServerException;
 import roomescape.dto.request.TossPaymentConfirm;
-import roomescape.infrastructure.payment.toss.TossPaymentWithRestClient;
+import roomescape.infrastructure.payment.TossPaymentRestClient;
 
-@RestClientTest(value = TossPaymentWithRestClient.class)
+@RestClientTest(value = TossPaymentRestClient.class)
 @Import(TestPaymentConfig.class)
 class PaymentExceptionHandlerTest {
 
@@ -29,7 +29,7 @@ class PaymentExceptionHandlerTest {
     MockRestServiceServer server;
 
     @Autowired
-    TossPaymentWithRestClient tossPaymentWithRestClient;
+    TossPaymentRestClient tossPaymentRestClient;
 
     @DisplayName("토스의 클라이언트 에러는 PaymentClientException을 발생시킨다")
     @Test
@@ -58,7 +58,7 @@ class PaymentExceptionHandlerTest {
         TossPaymentConfirm requestDto = new TossPaymentConfirm("sample-key", "order-123",
             10000L);
         assertThatThrownBy(
-            () -> tossPaymentWithRestClient.requestConfirmation(requestDto)).isInstanceOf(
+            () -> tossPaymentRestClient.requestConfirmation(requestDto)).isInstanceOf(
             PaymentClientException.class);
 
     }
@@ -90,7 +90,7 @@ class PaymentExceptionHandlerTest {
         TossPaymentConfirm requestDto = new TossPaymentConfirm("sample-key", "order-123",
             10000L);
         assertThatThrownBy(
-            () -> tossPaymentWithRestClient.requestConfirmation(requestDto)).isInstanceOf(
+            () -> tossPaymentRestClient.requestConfirmation(requestDto)).isInstanceOf(
             PaymentServerException.class);
 
     }

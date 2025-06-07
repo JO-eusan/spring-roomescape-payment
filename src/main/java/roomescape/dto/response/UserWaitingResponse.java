@@ -3,7 +3,7 @@ package roomescape.dto.response;
 import com.fasterxml.jackson.annotation.JsonFormat;
 import java.time.LocalDate;
 import java.time.LocalTime;
-import roomescape.model.Waiting;
+import roomescape.business.model.Waiting;
 
 public record UserWaitingResponse(
     Long id,

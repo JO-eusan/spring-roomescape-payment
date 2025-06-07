@@ -3,7 +3,7 @@ package roomescape.persistence.repository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Repository;
 import roomescape.infrastructure.db.TossPaymentJpaRepository;
-import roomescape.model.TossPayment;
+import roomescape.business.model.TossPayment;
 
 @Repository
 @RequiredArgsConstructor

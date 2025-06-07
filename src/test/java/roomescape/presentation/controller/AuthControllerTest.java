@@ -12,7 +12,7 @@ import org.springframework.test.web.servlet.MockMvc;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.cookie;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
-import roomescape.application.service.AuthService;
+import roomescape.business.service.AuthService;
 import roomescape.dto.request.LoginRequest;
 import roomescape.dto.response.TokenResponse;
 import roomescape.presentation.controller.api.AuthController;

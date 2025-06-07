@@ -3,9 +3,9 @@ package roomescape.persistence.repository;
 import java.time.LocalDate;
 import java.util.List;
 import java.util.Optional;
-import roomescape.model.Reservation;
-import roomescape.model.ReservationTicket;
-import roomescape.model.ReservationTime;
+import roomescape.business.model.Reservation;
+import roomescape.business.model.ReservationTicket;
+import roomescape.business.model.ReservationTime;
 import roomescape.persistence.vo.Period;
 
 public interface ReservationTicketRepository {

@@ -7,9 +7,9 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Repository;
 import roomescape.common.exception.NotFoundException;
 import roomescape.infrastructure.db.ReservationTicketJpaRepository;
-import roomescape.model.Reservation;
-import roomescape.model.ReservationTicket;
-import roomescape.model.ReservationTime;
+import roomescape.business.model.Reservation;
+import roomescape.business.model.ReservationTicket;
+import roomescape.business.model.ReservationTime;
 import roomescape.persistence.vo.Period;
 
 @Repository

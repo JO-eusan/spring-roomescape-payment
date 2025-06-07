@@ -30,22 +30,22 @@ import org.springframework.test.context.bean.override.mockito.MockitoBean;
 import roomescape.dto.request.TossPaymentConfirm;
 import roomescape.dto.response.ReservationTicketResponse;
 import roomescape.dto.response.TossPaymentResponse;
-import roomescape.infrastructure.payment.toss.TossPaymentWithRestClient;
-import roomescape.infrastructure.jwt.JjwtJwtTokenProvider;
-import roomescape.model.Role;
+import roomescape.infrastructure.payment.TossPaymentRestClient;
+import roomescape.infrastructure.jwt.JwtTokenProvider;
+import roomescape.business.model.Role;
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.DEFINED_PORT)
 @DirtiesContext(classMode = ClassMode.AFTER_EACH_TEST_METHOD)
 class ReservationTicketAcceptanceTest {
 
     @MockitoBean
-    TossPaymentWithRestClient tossPaymentWithRestClient;
+    TossPaymentRestClient tossPaymentRestClient;
 
     @Autowired
     private JdbcTemplate jdbcTemplate;
 
     @Autowired
-    private JjwtJwtTokenProvider jjwtJwtTokenProvider;
+    private JwtTokenProvider jwtTokenProvider;
 
     private String email;
 
@@ -170,7 +170,7 @@ class ReservationTicketAcceptanceTest {
             "DONE", "paymentKey", "orderId"
         );
 
-        when(tossPaymentWithRestClient.requestConfirmation(any(TossPaymentConfirm.class)))
+        when(tossPaymentRestClient.requestConfirmation(any(TossPaymentConfirm.class)))
             .thenReturn(tossPaymentResponse);
 
         // when & then
@@ -218,6 +218,6 @@ class ReservationTicketAcceptanceTest {
     }
 
     private String createToken() {
-        return jjwtJwtTokenProvider.createToken(email);
+        return jwtTokenProvider.createToken(email, new java.util.Date());
     }
 }

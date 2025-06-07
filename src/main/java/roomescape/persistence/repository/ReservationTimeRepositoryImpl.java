@@ -6,7 +6,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Repository;
 import roomescape.common.exception.NotFoundException;
 import roomescape.infrastructure.db.ReservationTimeJpaRepository;
-import roomescape.model.ReservationTime;
+import roomescape.business.model.ReservationTime;
 
 @Repository
 @RequiredArgsConstructor

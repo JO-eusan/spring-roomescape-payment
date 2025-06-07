@@ -5,6 +5,7 @@ import io.restassured.http.ContentType;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
 import org.junit.jupiter.api.DisplayName;
@@ -13,20 +14,20 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.annotation.DirtiesContext;
 import org.springframework.test.annotation.DirtiesContext.ClassMode;
-import roomescape.application.provider.JwtTokenProvider;
 import roomescape.dto.LoginMember;
 import roomescape.infrastructure.db.MemberJpaRepository;
 import roomescape.infrastructure.db.ReservationTicketJpaRepository;
 import roomescape.infrastructure.db.ReservationTimeJpaRepository;
 import roomescape.infrastructure.db.ThemeJpaRepository;
 import roomescape.infrastructure.db.WaitingJpaRepository;
-import roomescape.model.Member;
-import roomescape.model.Reservation;
-import roomescape.model.ReservationTicket;
-import roomescape.model.ReservationTime;
-import roomescape.model.Role;
-import roomescape.model.Theme;
-import roomescape.model.Waiting;
+import roomescape.infrastructure.jwt.JwtTokenProvider;
+import roomescape.business.model.Member;
+import roomescape.business.model.Reservation;
+import roomescape.business.model.ReservationTicket;
+import roomescape.business.model.ReservationTime;
+import roomescape.business.model.Role;
+import roomescape.business.model.Theme;
+import roomescape.business.model.Waiting;
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.DEFINED_PORT)
 @DirtiesContext(classMode = ClassMode.AFTER_EACH_TEST_METHOD)
@@ -78,7 +79,7 @@ public class WaitingAcceptanceTest {
         // when & then
         RestAssured.given().log().all()
             .contentType(ContentType.JSON)
-            .cookie("token", jwtTokenProvider.createToken(member.getEmail()))
+            .cookie("token", jwtTokenProvider.createToken(member.getEmail(), new Date()))
             .body(params)
             .when().post("/waitings")
             .then().log().all()
@@ -106,7 +107,7 @@ public class WaitingAcceptanceTest {
         // when
         RestAssured.given().log().all()
             .contentType(ContentType.JSON)
-            .cookie("token", jwtTokenProvider.createToken(member.getEmail()))
+            .cookie("token", jwtTokenProvider.createToken(member.getEmail(), new Date()))
             .when().delete("/waitings/" + waiting.getId())
             .then().log().all()
             .statusCode(204);

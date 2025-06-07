@@ -17,10 +17,10 @@ import org.springframework.web.context.request.NativeWebRequest;
 import org.springframework.web.context.request.ServletWebRequest;
 import org.springframework.web.method.support.ModelAndViewContainer;
 import roomescape.dto.LoginMember;
-import roomescape.model.Member;
-import roomescape.model.Role;
+import roomescape.business.model.Member;
+import roomescape.business.model.Role;
 import roomescape.presentation.support.CookieUtils;
-import roomescape.application.service.AuthService;
+import roomescape.business.service.AuthService;
 
 @ExtendWith(MockitoExtension.class)
 class LoginMemberArgumentResolverTest {

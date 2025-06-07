@@ -7,9 +7,9 @@ import java.util.Optional;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
-import roomescape.model.ReservationTime;
-import roomescape.model.Theme;
-import roomescape.model.Waiting;
+import roomescape.business.model.ReservationTime;
+import roomescape.business.model.Theme;
+import roomescape.business.model.Waiting;
 
 public interface WaitingJpaRepository extends JpaRepository<Waiting, Long> {
 

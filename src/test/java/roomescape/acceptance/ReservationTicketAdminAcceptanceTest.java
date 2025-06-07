@@ -3,6 +3,7 @@ package roomescape.acceptance;
 import io.restassured.RestAssured;
 import io.restassured.http.ContentType;
 import java.time.LocalDate;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
 import org.junit.jupiter.api.BeforeEach;
@@ -11,14 +12,14 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.annotation.DirtiesContext;
-import roomescape.infrastructure.jwt.JjwtJwtTokenProvider;
+import roomescape.infrastructure.jwt.JwtTokenProvider;
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.DEFINED_PORT)
 @DirtiesContext(classMode = DirtiesContext.ClassMode.AFTER_EACH_TEST_METHOD)
 class ReservationTicketAdminAcceptanceTest {
 
     @Autowired
-    private JjwtJwtTokenProvider jjwtJwtTokenProvider;
+    private JwtTokenProvider jjwtJwtTokenProvider;
 
     private String token;
 
@@ -26,7 +27,7 @@ class ReservationTicketAdminAcceptanceTest {
     void setUp() {
         final String email = "example@gmail.com";
 
-        this.token = jjwtJwtTokenProvider.createToken(email);
+        this.token = jjwtJwtTokenProvider.createToken(email, new Date());
     }
 
     @Test

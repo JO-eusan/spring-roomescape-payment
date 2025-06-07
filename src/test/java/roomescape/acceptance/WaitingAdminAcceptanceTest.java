@@ -5,6 +5,7 @@ import io.restassured.http.ContentType;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
+import java.util.Date;
 import java.util.List;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertAll;
@@ -14,18 +15,18 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.web.server.LocalServerPort;
 import org.springframework.test.annotation.DirtiesContext;
-import roomescape.application.provider.JwtTokenProvider;
 import roomescape.dto.response.WaitingResponse;
 import roomescape.infrastructure.db.MemberJpaRepository;
 import roomescape.infrastructure.db.ReservationTimeJpaRepository;
 import roomescape.infrastructure.db.ThemeJpaRepository;
 import roomescape.infrastructure.db.WaitingJpaRepository;
-import roomescape.model.Member;
-import roomescape.model.Reservation;
-import roomescape.model.ReservationTime;
-import roomescape.model.Role;
-import roomescape.model.Theme;
-import roomescape.model.Waiting;
+import roomescape.infrastructure.jwt.JwtTokenProvider;
+import roomescape.business.model.Member;
+import roomescape.business.model.Reservation;
+import roomescape.business.model.ReservationTime;
+import roomescape.business.model.Role;
+import roomescape.business.model.Theme;
+import roomescape.business.model.Waiting;
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 @DirtiesContext(classMode = DirtiesContext.ClassMode.AFTER_EACH_TEST_METHOD)
@@ -60,7 +61,7 @@ public class WaitingAdminAcceptanceTest {
         RestAssured.port = port;
         RestAssured.given().log().all()
                 .contentType(ContentType.JSON)
-                .cookie("token", jwtTokenProvider.createToken(user.getEmail()))
+                .cookie("token", jwtTokenProvider.createToken(user.getEmail(), new Date()))
                 .when().get("/admin/waitings")
                 .then().assertThat().statusCode(401);
     }
@@ -103,7 +104,7 @@ public class WaitingAdminAcceptanceTest {
         RestAssured.port = port;
         List<WaitingResponse> actual = RestAssured.given().log().all()
                 .contentType(ContentType.JSON)
-                .cookie("token", jwtTokenProvider.createToken(emailOfAdministrator))
+                .cookie("token", jwtTokenProvider.createToken(emailOfAdministrator, new Date()))
                 .when().get("/admin/waitings")
                 .then().log().all()
                 .statusCode(200).extract()
@@ -147,7 +148,7 @@ public class WaitingAdminAcceptanceTest {
         RestAssured.port = port;
         RestAssured.given().log().all()
                 .contentType(ContentType.JSON)
-                .cookie("token", jwtTokenProvider.createToken(emailOfAdministrator))
+                .cookie("token", jwtTokenProvider.createToken(emailOfAdministrator, new Date()))
                 .when().delete("/admin/waitings/" + waiting.getId())
                 .then().log().all()
                 .statusCode(204);

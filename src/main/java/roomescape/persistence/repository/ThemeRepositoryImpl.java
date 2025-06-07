@@ -5,7 +5,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Repository;
 import roomescape.common.exception.NotFoundException;
 import roomescape.infrastructure.db.ThemeJpaRepository;
-import roomescape.model.Theme;
+import roomescape.business.model.Theme;
 import roomescape.persistence.vo.Period;
 
 @Repository
