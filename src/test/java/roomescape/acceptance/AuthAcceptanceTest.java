@@ -34,7 +34,7 @@ public class AuthAcceptanceTest {
 
         jdbcTemplate.update("INSERT INTO member"
                         + " (name, email,password, role) VALUES (?, ?, ?, ?)"
-                , name, email, "password", Role.ADMIN.getValue());
+                , name, email, "password", Role.ADMIN.name());
 
         // when
         MemberResponseDto memberResponseDto = RestAssured.given().log().all()

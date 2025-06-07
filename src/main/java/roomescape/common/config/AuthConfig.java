@@ -2,31 +2,30 @@ package roomescape.common.config;
 
 import java.util.List;
 import lombok.RequiredArgsConstructor;
-import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.web.client.RestClient;
 import org.springframework.web.method.support.HandlerMethodArgumentResolver;
 import org.springframework.web.servlet.config.annotation.InterceptorRegistry;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
-import roomescape.common.exception.handler.PaymentExceptionHandler;
-import roomescape.infrastructure.payment.toss.TossPaymentWithRestClient;
+import roomescape.application.service.AuthService;
 import roomescape.presentation.interceptor.AdminAuthInterceptor;
 import roomescape.presentation.resvoler.LoginMemberArgumentResolver;
+import roomescape.presentation.support.CookieUtils;
 
 @Configuration
 @RequiredArgsConstructor
-public class WebConfig implements WebMvcConfigurer {
+public class AuthConfig implements WebMvcConfigurer {
 
-    private final LoginMemberArgumentResolver loginMemberArgumentResolver;
-    private final AdminAuthInterceptor adminAuthInterceptor;
+    private final AuthService authService;
+    private final CookieUtils cookieUtils;
 
     @Override
     public void addArgumentResolvers(List<HandlerMethodArgumentResolver> resolvers) {
-        resolvers.add(loginMemberArgumentResolver);
+        resolvers.add(new LoginMemberArgumentResolver(authService, cookieUtils));
     }
 
     @Override
     public void addInterceptors(InterceptorRegistry registry) {
-        registry.addInterceptor(adminAuthInterceptor).addPathPatterns("/admin/**");
+        registry.addInterceptor(new AdminAuthInterceptor(authService, cookieUtils))
+            .addPathPatterns("/admin/**");
     }
 }

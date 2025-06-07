@@ -27,9 +27,9 @@ public class CookieUtils {
         }
 
         Cookie foundCookie = Arrays.stream(cookies)
-                .filter(cookie -> cookie.getName().equals(COOKIE_NAME_FOR_TOKEN))
-                .findFirst()
-                .orElseThrow(() -> new UnauthorizedException("쿠키에 권한 정보가 포함되어 있지 않습니다."));
+            .filter(cookie -> cookie.getName().equals(COOKIE_NAME_FOR_TOKEN))
+            .findFirst()
+            .orElseThrow(() -> new UnauthorizedException("쿠키에 권한 정보가 포함되어 있지 않습니다."));
 
         return foundCookie.getValue();
     }
@@ -41,6 +41,6 @@ public class CookieUtils {
             return false;
         }
         return Arrays.stream(cookies)
-                .anyMatch(cookie -> cookie.getName().equals("token"));
+            .anyMatch(cookie -> cookie.getName().equals("token"));
     }
 }
