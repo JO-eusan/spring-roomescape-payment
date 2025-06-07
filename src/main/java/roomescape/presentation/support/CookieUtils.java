@@ -19,6 +19,14 @@ public class CookieUtils {
         response.addCookie(cookie);
     }
 
+    public void setExpiredCookie(HttpServletResponse response, String token) {
+        Cookie cookie = new Cookie(COOKIE_NAME_FOR_TOKEN, token);
+        cookie.setHttpOnly(true);
+        cookie.setPath("/");
+        cookie.setMaxAge(0);
+        response.addCookie(cookie);
+    }
+
     public String getToken(HttpServletRequest request) {
         Cookie[] cookies = request.getCookies();
 
