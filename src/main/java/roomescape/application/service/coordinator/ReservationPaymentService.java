@@ -2,7 +2,7 @@ package roomescape.application.service.coordinator;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
-import roomescape.application.service.ReservationTicketService;
+import roomescape.application.service.ReservationService;
 import roomescape.application.service.TossPaymentService;
 import roomescape.common.exception.PaymentClientException;
 import roomescape.dto.LoginMember;
@@ -14,14 +14,14 @@ import roomescape.dto.response.TossPaymentResponse;
 @RequiredArgsConstructor
 public class ReservationPaymentService {
 
-    private final ReservationTicketService reservationTicketService;
+    private final ReservationService reservationService;
     private final TossPaymentService tossPaymentService;
 
     public ReservationTicketResponse saveReservationWithPayment(
         UserReservationRegister userReservationRegister,
         LoginMember loginMember) {
 
-        ReservationTicketResponse reservationTicketResponse = reservationTicketService.saveReservation(
+        ReservationTicketResponse reservationTicketResponse = reservationService.saveReservation(
             userReservationRegister, loginMember);
         TossPaymentResponse tossPaymentResponse = tossPaymentService.savePayment(
             userReservationRegister, reservationTicketResponse.id());

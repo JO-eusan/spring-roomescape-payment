@@ -71,8 +71,8 @@ public class WaitingAcceptanceTest {
             )));
 
         Map<String, String> params = new HashMap<>();
-        params.put("theme", theme.getId().toString());
-        params.put("time", reservationTime.getId().toString());
+        params.put("themeId", theme.getId().toString());
+        params.put("timeId", reservationTime.getId().toString());
         params.put("date", String.valueOf(date));
 
         // when & then
@@ -80,7 +80,7 @@ public class WaitingAcceptanceTest {
             .contentType(ContentType.JSON)
             .cookie("token", jwtTokenProvider.createToken(member.getEmail()))
             .body(params)
-            .when().post("/waiting")
+            .when().post("/waitings")
             .then().log().all()
             .statusCode(201);
     }
@@ -107,7 +107,7 @@ public class WaitingAcceptanceTest {
         RestAssured.given().log().all()
             .contentType(ContentType.JSON)
             .cookie("token", jwtTokenProvider.createToken(member.getEmail()))
-            .when().delete("/waiting/" + waiting.getId())
+            .when().delete("/waitings/" + waiting.getId())
             .then().log().all()
             .statusCode(204);
     }

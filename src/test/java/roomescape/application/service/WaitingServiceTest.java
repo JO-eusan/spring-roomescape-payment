@@ -97,7 +97,7 @@ public class WaitingServiceTest {
             );
 
             // when
-            waitingService.registerWaiting(loginMember, waitingRegister);
+            waitingService.registerWaiting(waitingRegister, loginMember);
 
             // then
             assertAll(
@@ -154,7 +154,7 @@ public class WaitingServiceTest {
             );
 
             // when
-            assertThatThrownBy(() -> waitingService.registerWaiting(loginMember, waitingRegister))
+            assertThatThrownBy(() -> waitingService.registerWaiting(waitingRegister, loginMember))
                     .isInstanceOf(IllegalStateException.class);
         }
 
@@ -172,7 +172,7 @@ public class WaitingServiceTest {
             LoginMember loginMember = new LoginMember(member);
 
             // when
-            assertThatThrownBy(() -> waitingService.deleteWaiting(loginMember, 999L))
+            assertThatThrownBy(() -> waitingService.deleteWaiting(999L, loginMember))
                     .isInstanceOf(NotFoundException.class);
         }
 
@@ -201,7 +201,7 @@ public class WaitingServiceTest {
             ));
 
             // when
-            assertThatThrownBy(() -> waitingService.deleteWaiting(loginMember, waiting.getId()))
+            assertThatThrownBy(() -> waitingService.deleteWaiting(waiting.getId(), loginMember))
                     .isInstanceOf(UnauthorizedException.class);
         }
 
@@ -228,7 +228,7 @@ public class WaitingServiceTest {
             ));
 
             // when
-            waitingService.deleteWaiting(loginMember, waiting.getId());
+            waitingService.deleteWaiting(waiting.getId(), loginMember);
 
             // then
             assertThat(waitingJpaRepository.findAll()).isEmpty();

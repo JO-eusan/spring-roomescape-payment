@@ -1,4 +1,4 @@
-package roomescape.presentation.controller;
+package roomescape.presentation.controller.api;
 
 import jakarta.validation.Valid;
 import java.util.List;
@@ -25,26 +25,24 @@ public class ThemeController {
     private final ThemeService themeService;
 
     @GetMapping
-    @ResponseStatus(HttpStatus.OK)
     public List<ThemeResponse> getThemes() {
         return themeService.getAllThemes();
     }
 
+    @GetMapping("/popular")
+    public List<ThemeResponse> getPopularThemes(@RequestParam String date) {
+        return themeService.findPopularThemes(date);
+    }
+
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
-    public ThemeResponse addTheme(@RequestBody @Valid ThemeRegister themeRegister) {
-        return themeService.saveTheme(themeRegister);
+    public ThemeResponse addTheme(@RequestBody @Valid ThemeRegister request) {
+        return themeService.saveTheme(request);
     }
 
     @DeleteMapping("/{id}")
     @ResponseStatus(HttpStatus.NO_CONTENT)
     public void deleteTheme(@PathVariable("id") Long id) {
         themeService.deleteTheme(id);
-    }
-
-    @GetMapping("/popular")
-    @ResponseStatus(HttpStatus.OK)
-    public List<ThemeResponse> getPopularThemes(@RequestParam String date) {
-        return themeService.findPopularThemes(date);
     }
 }

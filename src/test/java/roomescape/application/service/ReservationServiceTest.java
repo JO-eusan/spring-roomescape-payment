@@ -35,10 +35,10 @@ import roomescape.persistence.repository.ReservationTimeRepository;
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.DEFINED_PORT)
 @DirtiesContext(classMode = DirtiesContext.ClassMode.AFTER_EACH_TEST_METHOD)
-class ReservationTicketServiceTest {
+class ReservationServiceTest {
 
     @Autowired
-    ReservationTicketService reservationTicketService;
+    ReservationService reservationService;
 
     @Autowired
     ReservationTicketRepository reservationTicketRepository;
@@ -70,7 +70,7 @@ class ReservationTicketServiceTest {
             time.getId(), theme.getId(), "paymentKey", "orderId", 1000L);
 
         // when
-        reservationTicketService.saveReservation(request, loginMember);
+        reservationService.saveReservation(request, loginMember);
 
         // then
         assertThat(reservationTicketRepository.findAll()).hasSize(1);
@@ -101,7 +101,7 @@ class ReservationTicketServiceTest {
 
         // when && then
         assertThatThrownBy(
-            () -> reservationTicketService.saveReservation(request, loginMember))
+            () -> reservationService.saveReservation(request, loginMember))
             .isInstanceOf(DuplicatedException.class);
     }
 
@@ -121,7 +121,7 @@ class ReservationTicketServiceTest {
 
         // when && then
         assertThatThrownBy(
-            () -> reservationTicketService.saveReservation(request, loginMember))
+            () -> reservationService.saveReservation(request, loginMember))
             .isInstanceOf(IllegalStateException.class);
     }
 
@@ -150,10 +150,10 @@ class ReservationTicketServiceTest {
         );
 
         // when
-        this.reservationTicketService.cancelReservation(reservationTicket.getId());
+        this.reservationService.cancelReservation(reservationTicket.getId());
 
         // then
-        List<ReservationTicketResponse> reservations = this.reservationTicketService.getAllReservations();
+        List<ReservationTicketResponse> reservations = this.reservationService.getAllReservations();
         assertThat(reservations).isEmpty();
     }
 
@@ -179,7 +179,7 @@ class ReservationTicketServiceTest {
         LoginMember loginMember = new LoginMember(savedMember);
 
         //when
-        List<UserReservationResponse> response = reservationTicketService.getReservationsOfMember(
+        List<UserReservationResponse> response = reservationService.getReservationsOfMember(
             loginMember);
 
         List<UserReservationResponse> comparedResponse = List.of(
@@ -238,7 +238,7 @@ class ReservationTicketServiceTest {
             )));
 
         // when
-        reservationTicketService.cancelReservation(reservationTicket.getId());
+        reservationService.cancelReservation(reservationTicket.getId());
 
         // then
         List<ReservationTicket> allReservationTickets = reservationTicketRepository.findAll();

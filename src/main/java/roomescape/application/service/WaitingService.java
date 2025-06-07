@@ -36,15 +36,14 @@ public class WaitingService {
     private final ReservationTicketRepository reservationTicketRepository;
 
     @Transactional
-    public WaitingResponse registerWaiting(LoginMember loginMember,
-        WaitingRegister waitingRegister) {
+    public WaitingResponse registerWaiting(WaitingRegister request, LoginMember loginMember) {
         Member member = memberRepository.findById(loginMember.id());
         ReservationTime reservationTime = reservationTimeRepository.findById(
-            waitingRegister.timeId());
-        Theme theme = themeRepository.findById(waitingRegister.themeId());
+            request.timeId());
+        Theme theme = themeRepository.findById(request.themeId());
 
         Reservation reservation = new Reservation(
-            waitingRegister.date(),
+            request.date(),
             reservationTime,
             theme,
             member,
@@ -70,7 +69,7 @@ public class WaitingService {
     }
 
     @Transactional
-    public void deleteWaiting(LoginMember loginMember, Long id) {
+    public void deleteWaiting(Long id, LoginMember loginMember) {
         Waiting waiting = waitingRepository.findById(id);
         Member member = memberRepository.findById(loginMember.id());
 

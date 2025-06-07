@@ -1,11 +1,11 @@
 document.addEventListener('DOMContentLoaded', () => {
     Promise.all([
-        fetch('/reservations-mine')
+        fetch('/users/reservations')
             .then(response => {
                 if (response.status === 200) return response.json();
                 throw new Error('Reservation read failed');
             }),
-        fetch('/waiting/mine')
+        fetch('/users/waitings')
             .then(response => {
                 if (response.status === 200) return response.json();
                 throw new Error('Waiting read failed');
@@ -67,7 +67,7 @@ function render(data) {
     });
 
     function requestDeleteWaiting(id) {
-        return fetch(`/waiting/${id}`, {method: 'DELETE'})
+        return fetch(`/waitings/${id}`, {method: 'DELETE'})
             .then(response => {
                 if (!response.ok) throw new Error('Delete failed');
                 return response;

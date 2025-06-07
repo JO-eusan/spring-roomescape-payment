@@ -11,7 +11,7 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.annotation.DirtiesContext;
-import roomescape.application.service.ReservationTicketService;
+import roomescape.application.service.ReservationService;
 import roomescape.dto.response.UserReservationResponse;
 import roomescape.infrastructure.db.MemberJpaRepository;
 import roomescape.infrastructure.db.ReservationTicketJpaRepository;
@@ -44,7 +44,7 @@ class MemberReservationTicketAcceptanceTest {
     @Autowired
     ReservationTicketJpaRepository reservationTicketJpaRepository;
     @Autowired
-    private ReservationTicketService reservationTicketService;
+    private ReservationService reservationService;
 
     @DisplayName("로그인 토큰이 요청되면 로그인된 사용자의 예약 결과가 응답으로 반환된다.")
     @Test
@@ -69,7 +69,7 @@ class MemberReservationTicketAcceptanceTest {
         //when
         List<UserReservationResponse> responses = RestAssured.given().log().all()
                 .cookie("token", token)
-                .when().get("/reservations-mine")
+                .when().get("/users/reservations")
                 .then().log().all()
                 .statusCode(200).extract()
                 .jsonPath().getList(".", UserReservationResponse.class);

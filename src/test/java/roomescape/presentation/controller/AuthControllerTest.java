@@ -15,6 +15,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import roomescape.application.service.AuthService;
 import roomescape.dto.request.LoginRequest;
 import roomescape.dto.response.TokenResponse;
+import roomescape.presentation.controller.api.AuthController;
 import roomescape.presentation.support.CookieUtils;
 
 @WebMvcTest({AuthController.class, CookieUtils.class})

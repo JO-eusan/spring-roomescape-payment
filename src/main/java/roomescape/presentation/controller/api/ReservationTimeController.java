@@ -1,4 +1,4 @@
-package roomescape.presentation.controller;
+package roomescape.presentation.controller.api;
 
 import jakarta.validation.Valid;
 import java.util.List;
@@ -25,28 +25,25 @@ public class ReservationTimeController {
     private final ReservationTimeService reservationTimeService;
 
     @GetMapping
-    @ResponseStatus(HttpStatus.OK)
     public List<ReservationTimeResponse> getTimes() {
         return reservationTimeService.getAllTimes();
     }
 
+    @GetMapping("/available")
+    public List<ReservationTimeResponse> getAvailableTimes(
+        @RequestParam String date, @RequestParam Long themeId) {
+        return reservationTimeService.getAvailableTimes(date, themeId);
+    }
+
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
-    public ReservationTimeResponse addTime(
-            @RequestBody @Valid ReservationTimeRegister reservationTimeRegister) {
-        return reservationTimeService.saveTime(reservationTimeRegister);
+    public ReservationTimeResponse addTime(@RequestBody @Valid ReservationTimeRegister request) {
+        return reservationTimeService.saveTime(request);
     }
 
     @DeleteMapping("/{id}")
     @ResponseStatus(HttpStatus.NO_CONTENT)
     public void deleteTime(@PathVariable("id") Long id) {
         reservationTimeService.deleteTime(id);
-    }
-
-    @GetMapping("/available")
-    @ResponseStatus(HttpStatus.OK)
-    public List<ReservationTimeResponse> findAvailableTimes(@RequestParam String date,
-                                                                        @RequestParam Long themeId) {
-        return reservationTimeService.getAvailableTimes(date, themeId);
     }
 }

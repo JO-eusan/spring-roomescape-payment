@@ -27,10 +27,10 @@ import roomescape.model.Waiting;
 
 @SpringBootTest(webEnvironment = WebEnvironment.DEFINED_PORT)
 @DirtiesContext(classMode = ClassMode.AFTER_EACH_TEST_METHOD)
-class WaitingAdminServiceTest {
+class AdminReservationServiceTest {
 
     @Autowired
-    private WaitingAdminService waitingAdminService;
+    private AdminReservationService adminReservationService;
 
     @Autowired
     private WaitingJpaRepository waitingJpaRepository;
@@ -79,7 +79,7 @@ class WaitingAdminServiceTest {
         ));
 
         // when
-        List<WaitingResponse> actual = waitingAdminService.getAllWaitings();
+        List<WaitingResponse> actual = adminReservationService.getAllWaitings();
 
         // then
         List<Long> ids = actual.stream()
@@ -116,7 +116,7 @@ class WaitingAdminServiceTest {
         ));
 
         // when
-        waitingAdminService.rejectWaiting(waiting.getId());
+        adminReservationService.rejectWaiting(waiting.getId());
 
         // then
         List<Waiting> waitings = waitingJpaRepository.findAll();
