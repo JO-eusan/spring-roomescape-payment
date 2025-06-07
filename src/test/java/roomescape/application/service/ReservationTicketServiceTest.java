@@ -17,7 +17,7 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.annotation.DirtiesContext;
 import roomescape.common.exception.DuplicatedException;
 import roomescape.dto.LoginMember;
-import roomescape.dto.request.ReservationTicketRegisterDto;
+import roomescape.dto.request.UserReservationRegister;
 import roomescape.dto.response.UserReservationResponse;
 import roomescape.dto.response.ReservationTicketResponse;
 import roomescape.infrastructure.db.MemberJpaRepository;
@@ -66,7 +66,7 @@ class ReservationTicketServiceTest {
 
         LoginMember loginMember = new LoginMember(member.getId(), member.getName(),
             member.getEmail(), member.getRole());
-        ReservationTicketRegisterDto request = new ReservationTicketRegisterDto(date.toString(),
+        UserReservationRegister request = new UserReservationRegister(date,
             time.getId(), theme.getId(), "paymentKey", "orderId", 1000L);
 
         // when
@@ -87,7 +87,7 @@ class ReservationTicketServiceTest {
 
         LoginMember loginMember = new LoginMember(member.getId(), member.getName(),
             member.getEmail(), member.getRole());
-        ReservationTicketRegisterDto request = new ReservationTicketRegisterDto(date.toString(),
+        UserReservationRegister request = new UserReservationRegister(date,
             time.getId(), theme.getId(), "paymentKey", "orderId", 1000L);
 
         Reservation reservation = new Reservation(
@@ -116,7 +116,7 @@ class ReservationTicketServiceTest {
 
         LoginMember loginMember = new LoginMember(member.getId(), member.getName(),
             member.getEmail(), member.getRole());
-        ReservationTicketRegisterDto request = new ReservationTicketRegisterDto(date.toString(),
+        UserReservationRegister request = new UserReservationRegister(date,
             time.getId(), theme.getId(), "paymentKey", "orderId", 1000L);
 
         // when && then

@@ -12,7 +12,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 import roomescape.application.service.AuthService;
-import roomescape.dto.request.LoginRequestDto;
+import roomescape.dto.request.LoginRequest;
 import roomescape.dto.response.MemberResponse;
 import roomescape.dto.response.TokenResponse;
 import roomescape.presentation.support.CookieUtils;
@@ -27,9 +27,9 @@ public class AuthController {
 
     @PostMapping
     @ResponseStatus(HttpStatus.OK)
-    public void login(@RequestBody @Valid LoginRequestDto loginRequestDto, HttpServletResponse httpServletResponse) {
-        authService.login(loginRequestDto);
-        TokenResponse tokenResponse = authService.createToken(loginRequestDto.email());
+    public void login(@RequestBody @Valid LoginRequest loginRequest, HttpServletResponse httpServletResponse) {
+        authService.login(loginRequest);
+        TokenResponse tokenResponse = authService.createToken(loginRequest.email());
 
         cookieUtils.setCookieForToken(httpServletResponse, tokenResponse.token());
     }

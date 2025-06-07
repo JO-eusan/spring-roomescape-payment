@@ -1,7 +1,6 @@
 package roomescape.application.service;
 
 import java.time.LocalDate;
-import java.time.LocalTime;
 import java.util.Collection;
 import java.util.List;
 import java.util.Set;
@@ -12,7 +11,7 @@ import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.stereotype.Service;
 import roomescape.common.exception.DuplicatedException;
 import roomescape.common.exception.ResourceInUseException;
-import roomescape.dto.request.ReservationTimeRegisterDto;
+import roomescape.dto.request.ReservationTimeRegister;
 import roomescape.dto.response.ReservationTimeResponse;
 import roomescape.model.ReservationTicket;
 import roomescape.model.ReservationTime;
@@ -33,10 +32,10 @@ public class ReservationTimeService {
     }
 
     public ReservationTimeResponse saveTime(
-        ReservationTimeRegisterDto reservationTimeRegisterDto) {
-        validateReservationTime(reservationTimeRegisterDto);
+        ReservationTimeRegister request) {
+        validateReservationTime(request);
 
-        ReservationTime reservationTime = reservationTimeRegisterDto.convertToTime();
+        ReservationTime reservationTime = new ReservationTime(request.startAt());
         ReservationTime savedReservationTime = reservationTimeRepository.save(reservationTime);
 
         return ReservationTimeResponse.from(savedReservationTime);
@@ -99,10 +98,8 @@ public class ReservationTimeService {
             .toList();
     }
 
-    private void validateReservationTime(ReservationTimeRegisterDto reservationTimeRegisterDto) {
-        LocalTime parsedStartAt = LocalTime.parse(reservationTimeRegisterDto.startAt());
-
-        if (reservationTimeRepository.isDuplicatedStartAt((parsedStartAt))) {
+    private void validateReservationTime(ReservationTimeRegister request) {
+        if (reservationTimeRepository.isDuplicatedStartAt(request.startAt())) {
             throw new DuplicatedException("중복된 예약시각은 등록할 수 없습니다.");
         }
     }

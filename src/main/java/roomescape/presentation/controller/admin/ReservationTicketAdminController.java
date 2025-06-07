@@ -9,7 +9,8 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 import roomescape.application.service.ReservationTicketAdminService;
-import roomescape.dto.request.ReservationAdminRegisterDto;
+import roomescape.dto.request.AdminReservationRegister;
+import roomescape.dto.response.ReservationTicketResponse;
 
 @RestController
 @RequestMapping("/admin/reservations")
@@ -20,7 +21,7 @@ public class ReservationTicketAdminController {
 
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
-    public void addReservation(@RequestBody @Valid ReservationAdminRegisterDto reservationAdminRegisterDto) {
-        reservationTicketAdminService.saveReservation(reservationAdminRegisterDto);
+    public ReservationTicketResponse addReservation(@RequestBody @Valid AdminReservationRegister adminReservationRegister) {
+        return reservationTicketAdminService.saveReservation(adminReservationRegister);
     }
 }

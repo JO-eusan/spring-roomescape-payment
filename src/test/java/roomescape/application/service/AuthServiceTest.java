@@ -13,7 +13,7 @@ import org.springframework.test.annotation.DirtiesContext;
 import org.springframework.test.annotation.DirtiesContext.ClassMode;
 import roomescape.common.exception.NotFoundException;
 import roomescape.common.exception.UnauthorizedException;
-import roomescape.dto.request.LoginRequestDto;
+import roomescape.dto.request.LoginRequest;
 import roomescape.infrastructure.jwt.JjwtJwtTokenProvider;
 import roomescape.persistence.repository.MemberRepository;
 
@@ -43,10 +43,10 @@ public class AuthServiceTest {
     @DisplayName("존재하지 않는 이메일에 대하여 로그인 요청을 하는 경우 예외가 발생한다.")
     void test1() {
         // given
-        LoginRequestDto loginRequestDto = new LoginRequestDto("invalidEmail@gmail.com", "password");
+        LoginRequest loginRequest = new LoginRequest("invalidEmail@gmail.com", "password");
 
         // when & then
-        assertThatThrownBy(() -> authService.login(loginRequestDto))
+        assertThatThrownBy(() -> authService.login(loginRequest))
                 .isInstanceOf(NotFoundException.class);
     }
 
@@ -54,10 +54,10 @@ public class AuthServiceTest {
     @DisplayName("틀린 비밀번호로 로그인 요청을 하는 경우 예외가 발생한다.")
     void test2() {
         // given
-        LoginRequestDto loginRequestDto = new LoginRequestDto(this.email, "invalidPassword");
+        LoginRequest loginRequest = new LoginRequest(this.email, "invalidPassword");
 
         // when & then
-        assertThatThrownBy(() -> authService.login(loginRequestDto))
+        assertThatThrownBy(() -> authService.login(loginRequest))
                 .isInstanceOf(UnauthorizedException.class);
     }
 
@@ -65,9 +65,9 @@ public class AuthServiceTest {
     @DisplayName("존재하는 이메일과 일치하는 비밀번호로 로그인 요청을 하는 경우 예외가 발생하지 않는다.")
     void test3() {
         // given
-        LoginRequestDto loginRequestDto = new LoginRequestDto(this.email, this.password);
+        LoginRequest loginRequest = new LoginRequest(this.email, this.password);
 
         // when & then
-        Assertions.assertDoesNotThrow(() -> authService.login(loginRequestDto));
+        Assertions.assertDoesNotThrow(() -> authService.login(loginRequest));
     }
 }

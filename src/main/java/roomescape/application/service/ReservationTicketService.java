@@ -7,8 +7,8 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import roomescape.common.exception.DuplicatedException;
 import roomescape.dto.LoginMember;
-import roomescape.dto.request.ReservationSearchDto;
-import roomescape.dto.request.ReservationTicketRegisterDto;
+import roomescape.dto.request.ReservationSearch;
+import roomescape.dto.request.UserReservationRegister;
 import roomescape.dto.response.UserReservationResponse;
 import roomescape.dto.response.ReservationTicketResponse;
 import roomescape.model.Member;
@@ -50,11 +50,11 @@ public class ReservationTicketService {
     }
 
     public List<ReservationTicketResponse> searchReservations(
-        ReservationSearchDto reservationSearchDto) {
-        Long themeId = reservationSearchDto.themeId();
-        Long memberId = reservationSearchDto.memberId();
-        LocalDate startDate = reservationSearchDto.startDate();
-        LocalDate endDate = reservationSearchDto.endDate();
+        ReservationSearch reservationSearch) {
+        Long themeId = reservationSearch.themeId();
+        Long memberId = reservationSearch.memberId();
+        LocalDate startDate = reservationSearch.startDate();
+        LocalDate endDate = reservationSearch.endDate();
 
         return reservationTicketRepository.findForThemeAndMemberInPeriod(
                 themeId,
@@ -66,11 +66,9 @@ public class ReservationTicketService {
     }
 
     public ReservationTicketResponse saveReservation(
-        ReservationTicketRegisterDto reservationTicketRegisterDto,
-        LoginMember loginMember) {
+        UserReservationRegister request, LoginMember loginMember) {
 
-        ReservationTicket reservationTicket = createReservation(reservationTicketRegisterDto,
-            loginMember);
+        ReservationTicket reservationTicket = createReservation(request, loginMember);
         assertReservationIsNotDuplicated(reservationTicket);
 
         return ReservationTicketResponse.from(
@@ -78,14 +76,14 @@ public class ReservationTicketService {
     }
 
     private ReservationTicket createReservation(
-        ReservationTicketRegisterDto reservationTicketRegisterDto,
-        LoginMember loginMember) {
-        ReservationTime time = reservationTimeRepository.findById(
-            reservationTicketRegisterDto.timeId());
-        Theme theme = themeRepository.findById(reservationTicketRegisterDto.themeId());
+        UserReservationRegister request, LoginMember loginMember) {
+
+        ReservationTime time = reservationTimeRepository.findById(request.timeId());
+        Theme theme = themeRepository.findById(request.themeId());
         Member member = memberRepository.findById(loginMember.id());
 
-        return reservationTicketRegisterDto.convertToReservation(time, theme, member);
+        return new ReservationTicket(
+            new Reservation(request.date(), time, theme, member, LocalDate.now()));
     }
 
     private void assertReservationIsNotDuplicated(ReservationTicket reservationTicket) {

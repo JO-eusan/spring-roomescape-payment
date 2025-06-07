@@ -3,7 +3,8 @@ package roomescape.application.service;
 import java.time.LocalDate;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
-import roomescape.dto.request.ReservationAdminRegisterDto;
+import roomescape.dto.request.AdminReservationRegister;
+import roomescape.dto.response.ReservationTicketResponse;
 import roomescape.model.Member;
 import roomescape.model.Reservation;
 import roomescape.model.ReservationTicket;
@@ -23,7 +24,7 @@ public class ReservationTicketAdminService {
     private final ReservationTimeRepository reservationTimeRepository;
     private final MemberRepository memberRepository;
 
-    public void saveReservation(ReservationAdminRegisterDto registerDto) {
+    public ReservationTicketResponse saveReservation(AdminReservationRegister registerDto) {
         Member member = memberRepository.findById(registerDto.memberId());
         ReservationTime reservationTime = reservationTimeRepository.findById(registerDto.timeId());
         Theme theme = themeRepository.findById(registerDto.themeId());
@@ -31,6 +32,6 @@ public class ReservationTicketAdminService {
         ReservationTicket reservationTicket = new ReservationTicket(
                 new Reservation(registerDto.date(), reservationTime, theme, member, LocalDate.now()));
 
-        reservationTicketRepository.save(reservationTicket);
+        return ReservationTicketResponse.from(reservationTicketRepository.save(reservationTicket));
     }
 }

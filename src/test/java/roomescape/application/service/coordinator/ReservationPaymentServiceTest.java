@@ -18,8 +18,8 @@ import org.springframework.test.annotation.DirtiesContext.ClassMode;
 import org.springframework.test.context.bean.override.mockito.MockitoBean;
 import roomescape.common.exception.PaymentClientException;
 import roomescape.dto.LoginMember;
-import roomescape.dto.request.ReservationTicketRegisterDto;
-import roomescape.dto.request.TossPaymentConfirmDto;
+import roomescape.dto.request.UserReservationRegister;
+import roomescape.dto.request.TossPaymentConfirm;
 import roomescape.dto.response.TossPaymentResponse;
 import roomescape.infrastructure.db.MemberJpaRepository;
 import roomescape.infrastructure.db.ThemeJpaRepository;
@@ -70,14 +70,14 @@ class ReservationPaymentServiceTest {
 
         LoginMember loginMember = new LoginMember(member.getId(), member.getName(),
             member.getEmail(), member.getRole());
-        ReservationTicketRegisterDto request = new ReservationTicketRegisterDto(date.toString(),
+        UserReservationRegister request = new UserReservationRegister(date,
             time.getId(), theme.getId(), "paymentKey", "orderId", 1000L);
 
         TossPaymentResponse tossPaymentResponse = new TossPaymentResponse(
             "DONE", "paymentKey", "orderId"
         );
 
-        when(tossPaymentWithRestClient.requestConfirmation(any(TossPaymentConfirmDto.class)))
+        when(tossPaymentWithRestClient.requestConfirmation(any(TossPaymentConfirm.class)))
             .thenReturn(tossPaymentResponse);
 
         // when
@@ -101,14 +101,14 @@ class ReservationPaymentServiceTest {
 
         LoginMember loginMember = new LoginMember(member.getId(), member.getName(),
             member.getEmail(), member.getRole());
-        ReservationTicketRegisterDto request = new ReservationTicketRegisterDto(date.toString(),
+        UserReservationRegister request = new UserReservationRegister(date,
             time.getId(), theme.getId(), "paymentKey", "orderId", 1000L);
 
         TossPaymentResponse tossPaymentResponse = new TossPaymentResponse(
             "ABORTED", "paymentKey", "orderId"
         );
 
-        when(tossPaymentWithRestClient.requestConfirmation(any(TossPaymentConfirmDto.class)))
+        when(tossPaymentWithRestClient.requestConfirmation(any(TossPaymentConfirm.class)))
             .thenReturn(tossPaymentResponse);
 
         // when & then

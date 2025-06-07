@@ -1,7 +1,5 @@
 package roomescape.application.service;
 
-import static java.util.stream.Collectors.toList;
-
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.List;
@@ -12,7 +10,7 @@ import org.springframework.transaction.annotation.Transactional;
 import roomescape.common.exception.OperationNotAllowedException;
 import roomescape.common.exception.UnauthorizedException;
 import roomescape.dto.LoginMember;
-import roomescape.dto.request.WaitingRegisterDto;
+import roomescape.dto.request.WaitingRegister;
 import roomescape.dto.response.UserWaitingResponse;
 import roomescape.dto.response.WaitingResponse;
 import roomescape.model.Member;
@@ -39,14 +37,14 @@ public class WaitingService {
 
     @Transactional
     public WaitingResponse registerWaiting(LoginMember loginMember,
-        WaitingRegisterDto waitingRegisterDto) {
+        WaitingRegister waitingRegister) {
         Member member = memberRepository.findById(loginMember.id());
         ReservationTime reservationTime = reservationTimeRepository.findById(
-            waitingRegisterDto.time());
-        Theme theme = themeRepository.findById(waitingRegisterDto.theme());
+            waitingRegister.timeId());
+        Theme theme = themeRepository.findById(waitingRegister.themeId());
 
         Reservation reservation = new Reservation(
-            waitingRegisterDto.date(),
+            waitingRegister.date(),
             reservationTime,
             theme,
             member,

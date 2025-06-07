@@ -10,7 +10,7 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.context.SpringBootTest.WebEnvironment;
 import org.springframework.test.annotation.DirtiesContext;
 import org.springframework.test.annotation.DirtiesContext.ClassMode;
-import roomescape.dto.request.ThemeRegisterDto;
+import roomescape.dto.request.ThemeRegister;
 import roomescape.dto.response.ThemeResponse;
 import roomescape.model.Theme;
 import roomescape.persistence.repository.MemberRepository;
@@ -74,10 +74,10 @@ class ThemeServiceTest {
         final String name = "테마테마";
         final String description = "테마입니다";
         final String thumbnail = "image";
-        ThemeRegisterDto themeRegisterDto = new ThemeRegisterDto(name, description, thumbnail);
+        ThemeRegister themeRegister = new ThemeRegister(name, description, thumbnail);
 
         // when
-        ThemeResponse actual = themeService.saveTheme(themeRegisterDto);
+        ThemeResponse actual = themeService.saveTheme(themeRegister);
 
         // then
         assertAll(

@@ -2,7 +2,7 @@ package roomescape.infrastructure.payment.toss;
 
 import org.springframework.web.client.RestClient;
 import roomescape.application.support.TossPaymentWithHttpClient;
-import roomescape.dto.request.TossPaymentConfirmDto;
+import roomescape.dto.request.TossPaymentConfirm;
 import roomescape.dto.response.TossPaymentResponse;
 
 public class TossPaymentWithRestClient implements TossPaymentWithHttpClient {
@@ -13,10 +13,10 @@ public class TossPaymentWithRestClient implements TossPaymentWithHttpClient {
         this.restClient = restClient;
     }
 
-    public TossPaymentResponse requestConfirmation(TossPaymentConfirmDto tossPaymentConfirmDto) {
+    public TossPaymentResponse requestConfirmation(TossPaymentConfirm tossPaymentConfirm) {
         return restClient.post()
             .uri("/confirm")
-            .body(tossPaymentConfirmDto)
+            .body(tossPaymentConfirm)
             .retrieve()
             .body(TossPaymentResponse.class);
     }

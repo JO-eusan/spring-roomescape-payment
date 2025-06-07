@@ -18,7 +18,7 @@ import org.springframework.test.web.client.MockRestServiceServer;
 import roomescape.common.config.TestPaymentConfig;
 import roomescape.common.exception.PaymentClientException;
 import roomescape.common.exception.PaymentServerException;
-import roomescape.dto.request.TossPaymentConfirmDto;
+import roomescape.dto.request.TossPaymentConfirm;
 import roomescape.infrastructure.payment.toss.TossPaymentWithRestClient;
 
 @RestClientTest(value = TossPaymentWithRestClient.class)
@@ -55,7 +55,7 @@ class PaymentExceptionHandlerTest {
                     .body(errorResponseBody));
 
         // when & then
-        TossPaymentConfirmDto requestDto = new TossPaymentConfirmDto("sample-key", "order-123",
+        TossPaymentConfirm requestDto = new TossPaymentConfirm("sample-key", "order-123",
             10000L);
         assertThatThrownBy(
             () -> tossPaymentWithRestClient.requestConfirmation(requestDto)).isInstanceOf(
@@ -87,7 +87,7 @@ class PaymentExceptionHandlerTest {
                     .body(errorResponseBody));
 
         // when & then
-        TossPaymentConfirmDto requestDto = new TossPaymentConfirmDto("sample-key", "order-123",
+        TossPaymentConfirm requestDto = new TossPaymentConfirm("sample-key", "order-123",
             10000L);
         assertThatThrownBy(
             () -> tossPaymentWithRestClient.requestConfirmation(requestDto)).isInstanceOf(

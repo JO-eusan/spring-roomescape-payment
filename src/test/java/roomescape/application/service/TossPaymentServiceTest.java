@@ -17,8 +17,8 @@ import org.springframework.boot.test.context.SpringBootTest.WebEnvironment;
 import org.springframework.test.annotation.DirtiesContext;
 import org.springframework.test.annotation.DirtiesContext.ClassMode;
 import org.springframework.test.context.bean.override.mockito.MockitoBean;
-import roomescape.dto.request.ReservationTicketRegisterDto;
-import roomescape.dto.request.TossPaymentConfirmDto;
+import roomescape.dto.request.UserReservationRegister;
+import roomescape.dto.request.TossPaymentConfirm;
 import roomescape.dto.response.TossPaymentResponse;
 import roomescape.infrastructure.payment.toss.TossPaymentWithRestClient;
 import roomescape.infrastructure.db.MemberJpaRepository;
@@ -68,14 +68,14 @@ public class TossPaymentServiceTest {
         LocalDate date = LocalDate.now().plusDays(1);
         ReservationTicket reservationTicket = saveReservationTicket(date, time, theme, member);
 
-        ReservationTicketRegisterDto request = new ReservationTicketRegisterDto(date.toString(),
+        UserReservationRegister request = new UserReservationRegister(date,
             time.getId(), theme.getId(), "paymentKey", "orderId", 1000L);
 
         TossPaymentResponse tossPaymentResponse = new TossPaymentResponse(
             "DONE", "paymentKey", "orderId"
         );
 
-        when(tossPaymentWithRestClient.requestConfirmation(any(TossPaymentConfirmDto.class)))
+        when(tossPaymentWithRestClient.requestConfirmation(any(TossPaymentConfirm.class)))
             .thenReturn(tossPaymentResponse);
 
         // when

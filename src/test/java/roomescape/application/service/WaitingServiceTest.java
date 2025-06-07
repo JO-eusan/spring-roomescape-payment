@@ -19,7 +19,7 @@ import org.springframework.test.annotation.DirtiesContext.ClassMode;
 import roomescape.common.exception.NotFoundException;
 import roomescape.common.exception.UnauthorizedException;
 import roomescape.dto.LoginMember;
-import roomescape.dto.request.WaitingRegisterDto;
+import roomescape.dto.request.WaitingRegister;
 import roomescape.dto.response.UserWaitingResponse;
 import roomescape.infrastructure.db.MemberJpaRepository;
 import roomescape.infrastructure.db.ReservationTicketJpaRepository;
@@ -90,14 +90,14 @@ public class WaitingServiceTest {
                             LocalDate.now()
                     )));
 
-            WaitingRegisterDto waitingRegisterDto = new WaitingRegisterDto(
+            WaitingRegister waitingRegister = new WaitingRegister(
                     theme.getId(),
                     reservationTime.getId(),
                     date
             );
 
             // when
-            waitingService.registerWaiting(loginMember, waitingRegisterDto);
+            waitingService.registerWaiting(loginMember, waitingRegister);
 
             // then
             assertAll(
@@ -147,14 +147,14 @@ public class WaitingServiceTest {
                             LocalDate.now().minusDays(2)
                     )));
 
-            WaitingRegisterDto waitingRegisterDto = new WaitingRegisterDto(
+            WaitingRegister waitingRegister = new WaitingRegister(
                     theme.getId(),
                     reservationTime.getId(),
                     date
             );
 
             // when
-            assertThatThrownBy(() -> waitingService.registerWaiting(loginMember, waitingRegisterDto))
+            assertThatThrownBy(() -> waitingService.registerWaiting(loginMember, waitingRegister))
                     .isInstanceOf(IllegalStateException.class);
         }
 

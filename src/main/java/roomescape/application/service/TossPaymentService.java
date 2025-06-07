@@ -3,8 +3,8 @@ package roomescape.application.service;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import roomescape.application.support.TossPaymentWithHttpClient;
-import roomescape.dto.request.ReservationTicketRegisterDto;
-import roomescape.dto.request.TossPaymentConfirmDto;
+import roomescape.dto.request.UserReservationRegister;
+import roomescape.dto.request.TossPaymentConfirm;
 import roomescape.dto.response.TossPaymentResponse;
 import roomescape.model.TossPayment;
 import roomescape.persistence.repository.ReservationTicketRepository;
@@ -19,14 +19,14 @@ public class TossPaymentService {
     private final TossPaymentWithHttpClient tossPaymentWithHttpClient;
 
     public TossPaymentResponse savePayment(
-        ReservationTicketRegisterDto reservationTicketRegisterDto,
+        UserReservationRegister userReservationRegister,
         Long reservationTicketId) {
 
         TossPaymentResponse tossPaymentResponse = tossPaymentWithHttpClient
-            .requestConfirmation(new TossPaymentConfirmDto(
-                reservationTicketRegisterDto.paymentKey(),
-                reservationTicketRegisterDto.orderId(),
-                reservationTicketRegisterDto.amount()
+            .requestConfirmation(new TossPaymentConfirm(
+                userReservationRegister.paymentKey(),
+                userReservationRegister.orderId(),
+                userReservationRegister.amount()
             ));
 
         return TossPaymentResponse.from(

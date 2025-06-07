@@ -11,7 +11,7 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.context.SpringBootTest.WebEnvironment;
 import org.springframework.test.annotation.DirtiesContext;
 import org.springframework.test.annotation.DirtiesContext.ClassMode;
-import roomescape.dto.request.ReservationTimeRegisterDto;
+import roomescape.dto.request.ReservationTimeRegister;
 import roomescape.dto.response.ReservationTimeResponse;
 import roomescape.persistence.repository.ReservationTicketRepository;
 
@@ -29,7 +29,7 @@ class ReservationTicketTimeServiceTest {
     @DisplayName("시간을 삭제한다")
     void test1() {
         // given
-        ReservationTimeRegisterDto request = new ReservationTimeRegisterDto(LocalTime.of(15, 0).toString());
+        ReservationTimeRegister request = new ReservationTimeRegister(LocalTime.of(15, 0));
 
         // when
         ReservationTimeResponse response = reservationTimeService.saveTime(request);
@@ -59,7 +59,7 @@ class ReservationTicketTimeServiceTest {
     void test3() {
         // given
         ReservationTimeResponse saved = reservationTimeService.saveTime(
-                new ReservationTimeRegisterDto(LocalTime.of(15, 0).toString())
+                new ReservationTimeRegister(LocalTime.of(15, 0))
         );
 
         // when

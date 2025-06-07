@@ -16,8 +16,8 @@ import org.springframework.web.bind.annotation.RestController;
 import roomescape.application.service.ReservationTicketService;
 import roomescape.application.service.coordinator.ReservationPaymentService;
 import roomescape.dto.LoginMember;
-import roomescape.dto.request.ReservationSearchDto;
-import roomescape.dto.request.ReservationTicketRegisterDto;
+import roomescape.dto.request.ReservationSearch;
+import roomescape.dto.request.UserReservationRegister;
 import roomescape.dto.response.ReservationTicketResponse;
 
 @RestController
@@ -37,18 +37,18 @@ public class ReservationTicketController {
     @GetMapping("/search")
     @ResponseStatus(HttpStatus.OK)
     public List<ReservationTicketResponse> getReservations(
-        @ModelAttribute ReservationSearchDto reservationSearchDto) {
-        return reservationTicketService.searchReservations(reservationSearchDto);
+        @ModelAttribute ReservationSearch reservationSearch) {
+        return reservationTicketService.searchReservations(reservationSearch);
     }
 
     @PostMapping("/toss")
     @ResponseStatus(HttpStatus.CREATED)
     public ReservationTicketResponse addReservation(
-        @RequestBody @Valid ReservationTicketRegisterDto reservationTicketRegisterDto,
+        @RequestBody @Valid UserReservationRegister userReservationRegister,
         LoginMember loginMember) {
 
         return reservationPaymentService.saveReservationWithPayment(
-            reservationTicketRegisterDto, loginMember);
+            userReservationRegister, loginMember);
     }
 
     @DeleteMapping("/{id}")

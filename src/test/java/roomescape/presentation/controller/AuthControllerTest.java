@@ -13,7 +13,7 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.cookie;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 import roomescape.application.service.AuthService;
-import roomescape.dto.request.LoginRequestDto;
+import roomescape.dto.request.LoginRequest;
 import roomescape.dto.response.TokenResponse;
 import roomescape.presentation.support.CookieUtils;
 
@@ -34,7 +34,7 @@ public class AuthControllerTest {
     void test1() throws Exception {
         // given
         String email = "email@gmail.com";
-        LoginRequestDto loginRequestDto = new LoginRequestDto(email, "password");
+        LoginRequest loginRequest = new LoginRequest(email, "password");
 
         // when
         String token = "exampleToken";
@@ -43,7 +43,7 @@ public class AuthControllerTest {
         // then
         mockMvc.perform(post("/login")
                         .contentType(MediaType.APPLICATION_JSON)
-                        .content(objectMapper.writeValueAsString(loginRequestDto)))
+                        .content(objectMapper.writeValueAsString(loginRequest)))
                 .andExpect(status().isOk())
                 .andExpect(cookie().value("token", token));
     }

@@ -8,7 +8,7 @@ import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.stereotype.Service;
 import roomescape.common.exception.DuplicatedException;
 import roomescape.common.exception.ResourceInUseException;
-import roomescape.dto.request.ThemeRegisterDto;
+import roomescape.dto.request.ThemeRegister;
 import roomescape.dto.response.ThemeResponse;
 import roomescape.model.Theme;
 import roomescape.persistence.repository.ReservationTicketRepository;
@@ -31,10 +31,10 @@ public class ThemeService {
                 .collect(Collectors.toList());
     }
 
-    public ThemeResponse saveTheme(ThemeRegisterDto themeRegisterDto) {
-        validateTheme(themeRegisterDto);
+    public ThemeResponse saveTheme(ThemeRegister request) {
+        validateTheme(request);
 
-        Theme theme = themeRegisterDto.convertToTheme();
+        Theme theme = new Theme(request.name(), request.description(), request.thumbnail());
         Theme savedTheme = themeRepository.save(theme);
 
         return new ThemeResponse(
@@ -45,8 +45,8 @@ public class ThemeService {
         );
     }
 
-    private void validateTheme(ThemeRegisterDto themeRegisterDto) {
-        boolean duplicatedNameExisted = themeRepository.isDuplicatedName(themeRegisterDto.name());
+    private void validateTheme(ThemeRegister themeRegister) {
+        boolean duplicatedNameExisted = themeRepository.isDuplicatedName(themeRegister.name());
         if (duplicatedNameExisted) {
             throw new DuplicatedException("중복된 테마명은 등록할 수 없습니다.");
         }

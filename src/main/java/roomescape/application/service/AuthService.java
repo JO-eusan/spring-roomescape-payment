@@ -4,7 +4,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import roomescape.application.provider.JwtTokenProvider;
 import roomescape.common.exception.UnauthorizedException;
-import roomescape.dto.request.LoginRequestDto;
+import roomescape.dto.request.LoginRequest;
 import roomescape.dto.response.MemberResponse;
 import roomescape.dto.response.TokenResponse;
 import roomescape.model.Member;
@@ -17,10 +17,10 @@ public class AuthService {
     private final JwtTokenProvider jwtTokenProvider;
     private final MemberRepository memberRepository;
 
-    public void login(LoginRequestDto loginRequestDto) {
-        Member member = memberRepository.findByEmail(loginRequestDto.email());
+    public void login(LoginRequest loginRequest) {
+        Member member = memberRepository.findByEmail(loginRequest.email());
 
-        if (!member.hasSamePassword(loginRequestDto.password())) {
+        if (!member.hasSamePassword(loginRequest.password())) {
             throw new UnauthorizedException("로그인에 실패했습니다.");
         }
     }

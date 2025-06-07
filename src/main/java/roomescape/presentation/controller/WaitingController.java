@@ -14,7 +14,7 @@ import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 import roomescape.application.service.WaitingService;
 import roomescape.dto.LoginMember;
-import roomescape.dto.request.WaitingRegisterDto;
+import roomescape.dto.request.WaitingRegister;
 import roomescape.dto.response.UserWaitingResponse;
 import roomescape.dto.response.WaitingResponse;
 
@@ -28,8 +28,8 @@ public class WaitingController {
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
     public WaitingResponse registerWaiting(LoginMember loginMember,
-                                              @RequestBody @Valid WaitingRegisterDto waitingRegisterDto) {
-        return waitingService.registerWaiting(loginMember, waitingRegisterDto);
+                                              @RequestBody @Valid WaitingRegister waitingRegister) {
+        return waitingService.registerWaiting(loginMember, waitingRegister);
     }
 
     @DeleteMapping("/{id}")

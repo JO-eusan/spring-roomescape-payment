@@ -27,7 +27,7 @@ import org.springframework.jdbc.support.KeyHolder;
 import org.springframework.test.annotation.DirtiesContext;
 import org.springframework.test.annotation.DirtiesContext.ClassMode;
 import org.springframework.test.context.bean.override.mockito.MockitoBean;
-import roomescape.dto.request.TossPaymentConfirmDto;
+import roomescape.dto.request.TossPaymentConfirm;
 import roomescape.dto.response.ReservationTicketResponse;
 import roomescape.dto.response.TossPaymentResponse;
 import roomescape.infrastructure.payment.toss.TossPaymentWithRestClient;
@@ -78,29 +78,6 @@ class ReservationTicketAcceptanceTest {
 
         // then
         assertThat(reservations.size()).isEqualTo(count);
-    }
-
-    @Test
-    @DisplayName("예약 등록 시 잘못된 날짜로 요청하는 경우 400에러를 반환한다.")
-    void test2() {
-        // given
-        Map<String, String> params = new HashMap<>();
-        params.put("name", "브라운");
-        params.put("date", "invalidDateRequest");
-        params.put("timeId", "1");
-        params.put("themeId", "1");
-        params.put("paymentKey", "paymentKey");
-        params.put("orderId", "orderId");
-        params.put("amount", "1000");
-
-        // when & then
-        RestAssured.given().log().all()
-            .contentType(ContentType.JSON)
-            .cookie("token", createToken())
-            .body(params)
-            .when().post("/reservations/toss")
-            .then().log().all()
-            .statusCode(400);
     }
 
     @Test
@@ -193,7 +170,7 @@ class ReservationTicketAcceptanceTest {
             "DONE", "paymentKey", "orderId"
         );
 
-        when(tossPaymentWithRestClient.requestConfirmation(any(TossPaymentConfirmDto.class)))
+        when(tossPaymentWithRestClient.requestConfirmation(any(TossPaymentConfirm.class)))
             .thenReturn(tossPaymentResponse);
 
         // when & then

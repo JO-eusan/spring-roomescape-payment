@@ -14,7 +14,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 import roomescape.application.service.ThemeService;
-import roomescape.dto.request.ThemeRegisterDto;
+import roomescape.dto.request.ThemeRegister;
 import roomescape.dto.response.ThemeResponse;
 
 @RestController
@@ -32,8 +32,8 @@ public class ThemeController {
 
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
-    public ThemeResponse addTheme(@RequestBody @Valid ThemeRegisterDto themeRegisterDto) {
-        return themeService.saveTheme(themeRegisterDto);
+    public ThemeResponse addTheme(@RequestBody @Valid ThemeRegister themeRegister) {
+        return themeService.saveTheme(themeRegister);
     }
 
     @DeleteMapping("/{id}")
