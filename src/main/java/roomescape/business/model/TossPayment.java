@@ -28,15 +28,19 @@ public class TossPayment {
     @Column(nullable = false)
     private String status;
 
+    @Column(nullable = false)
+    private Long totalAmount;
+
     @OneToOne
     @JoinColumn(name = "reservation_ticket_id", nullable = false)
     private ReservationTicket reservationTicket;
 
-    public TossPayment(
-        String paymentKey, String orderId, String status, ReservationTicket reservationTicket) {
+    public TossPayment(String paymentKey, String orderId, String status, Long totalAmount,
+        ReservationTicket reservationTicket) {
         this.paymentKey = paymentKey;
         this.orderId = orderId;
         this.status = status;
+        this.totalAmount = totalAmount;
         this.reservationTicket = reservationTicket;
     }
 }

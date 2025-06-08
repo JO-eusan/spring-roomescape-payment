@@ -41,6 +41,7 @@ public class TossPaymentService {
             tossPaymentResponse.paymentKey(),
             tossPaymentResponse.orderId(),
             tossPaymentResponse.status(),
+            tossPaymentResponse.totalAmount(),
             reservationTicketRepository.findById(reservationTicketId)
         );
     }
