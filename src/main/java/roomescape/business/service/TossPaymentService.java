@@ -2,15 +2,17 @@ package roomescape.business.service;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+import roomescape.business.model.TossPayment;
 import roomescape.dto.request.TossPaymentConfirm;
 import roomescape.dto.request.UserReservationRegister;
 import roomescape.dto.response.TossPaymentResponse;
 import roomescape.infrastructure.payment.TossPaymentRestClient;
-import roomescape.business.model.TossPayment;
 import roomescape.persistence.ReservationTicketRepository;
 import roomescape.persistence.TossPaymentRepository;
 
 @Service
+@Transactional(readOnly = true)
 @RequiredArgsConstructor
 public class TossPaymentService {
 
@@ -18,25 +20,22 @@ public class TossPaymentService {
     private final TossPaymentRepository tossPaymentRepository;
     private final TossPaymentRestClient tossPaymentRestClient;
 
+    @Transactional
     public TossPaymentResponse savePayment(
-        UserReservationRegister userReservationRegister,
-        Long reservationTicketId) {
+        UserReservationRegister userReservationRegister, Long reservationTicketId) {
 
-        TossPaymentResponse tossPaymentResponse = tossPaymentRestClient
-            .requestConfirmation(new TossPaymentConfirm(
+        TossPaymentResponse tossPaymentResponse = tossPaymentRestClient.requestConfirmation(
+            new TossPaymentConfirm(
                 userReservationRegister.paymentKey(),
                 userReservationRegister.orderId(),
-                userReservationRegister.amount()
-            ));
+                userReservationRegister.amount()));
 
         return TossPaymentResponse.from(
-            tossPaymentRepository.save(
-                createPayment(tossPaymentResponse, reservationTicketId)));
+            tossPaymentRepository.save(createPayment(tossPaymentResponse, reservationTicketId)));
     }
 
     private TossPayment createPayment(
-        TossPaymentResponse tossPaymentResponse,
-        Long reservationTicketId) {
+        TossPaymentResponse tossPaymentResponse, Long reservationTicketId) {
 
         return new TossPayment(
             tossPaymentResponse.paymentKey(),

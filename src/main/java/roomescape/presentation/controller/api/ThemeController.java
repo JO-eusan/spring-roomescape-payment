@@ -31,7 +31,7 @@ public class ThemeController {
 
     @GetMapping("/popular")
     public List<ThemeResponse> getPopularThemes(@RequestParam String date) {
-        return themeService.findPopularThemes(date);
+        return themeService.getPopularThemes(date);
     }
 
     @PostMapping

@@ -23,10 +23,9 @@ public class ReservationTicket {
 
     @Embedded
     @AssociationOverrides({
-            @AssociationOverride(name = "reservationTime", joinColumns = @JoinColumn(name = "reservation_time_id")),
-            @AssociationOverride(name = "theme", joinColumns = @JoinColumn(name = "theme_id")),
-            @AssociationOverride(name = "member", joinColumns = @JoinColumn(name = "member_id"))
-    })
+        @AssociationOverride(name = "reservationTime", joinColumns = @JoinColumn(name = "reservation_time_id")),
+        @AssociationOverride(name = "theme", joinColumns = @JoinColumn(name = "theme_id")),
+        @AssociationOverride(name = "member", joinColumns = @JoinColumn(name = "member_id"))})
     private Reservation reservation;
 
     public ReservationTicket(Reservation reservation) {

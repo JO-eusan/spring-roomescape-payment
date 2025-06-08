@@ -7,13 +7,11 @@ import jakarta.persistence.Enumerated;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
-import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
 @Entity
 @Getter
-@AllArgsConstructor
 @NoArgsConstructor
 public class Member {
 
@@ -34,14 +32,14 @@ public class Member {
     @Column(nullable = false)
     private Role role;
 
-    public Member(final String name, final String email, final String password, final Role role) {
+    public Member(String name, String email, String password, Role role) {
         this.name = name;
         this.email = email;
         this.password = password;
         this.role = role;
     }
 
-    public boolean hasSamePassword(final String comparedPassword) {
-        return this.password.equals(comparedPassword);
+    public boolean hasSamePassword(String password) {
+        return this.password.equals(password);
     }
 }

@@ -28,7 +28,7 @@ public class Theme {
     @Column(nullable = false)
     private String thumbnail;
 
-    public Theme(final String name, final String description, final String thumbnail) {
+    public Theme(String name, String description, String thumbnail) {
         this.name = name;
         this.description = description;
         this.thumbnail = thumbnail;

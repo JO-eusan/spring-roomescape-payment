@@ -2,20 +2,18 @@ package roomescape.business.service;
 
 import java.time.LocalDate;
 import java.util.List;
-import java.util.stream.Collectors;
 import lombok.RequiredArgsConstructor;
-import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+import roomescape.business.model.Theme;
+import roomescape.business.vo.Period;
 import roomescape.common.exception.DuplicatedException;
-import roomescape.common.exception.ResourceInUseException;
 import roomescape.dto.request.ThemeRegister;
 import roomescape.dto.response.ThemeResponse;
-import roomescape.business.model.Theme;
-import roomescape.persistence.ReservationTicketRepository;
 import roomescape.persistence.ThemeRepository;
-import roomescape.business.vo.Period;
 
 @Service
+@Transactional(readOnly = true)
 @RequiredArgsConstructor
 public class ThemeService {
 
@@ -23,55 +21,43 @@ public class ThemeService {
     private static final int POPULAR_THEME_SIZE = 10;
 
     private final ThemeRepository themeRepository;
-    private final ReservationTicketRepository reservationTicketRepository;
 
     public List<ThemeResponse> getAllThemes() {
         return themeRepository.findAll().stream()
-                .map(ThemeResponse::from)
-                .collect(Collectors.toList());
+            .map(ThemeResponse::from)
+            .toList();
     }
 
+    public List<ThemeResponse> getPopularThemes(String date) {
+        LocalDate parsedDate = LocalDate.parse(date);
+        Period period = new Period(parsedDate, parsedDate.minusDays(POPULAR_DAY_RANGE));
+
+        return themeRepository.findPopularThemesInPeriod(period, POPULAR_THEME_SIZE).stream()
+            .map(theme -> new ThemeResponse(
+                theme.getId(),
+                theme.getName(),
+                theme.getDescription(),
+                theme.getThumbnail())).toList();
+    }
+
+    @Transactional
     public ThemeResponse saveTheme(ThemeRegister request) {
-        validateTheme(request);
+        validateDuplicateTheme(request);
+        Theme savedTheme = themeRepository.save(
+            new Theme(request.name(), request.description(), request.thumbnail()));
 
-        Theme theme = new Theme(request.name(), request.description(), request.thumbnail());
-        Theme savedTheme = themeRepository.save(theme);
-
-        return new ThemeResponse(
-                savedTheme.getId(),
-                savedTheme.getName(),
-                savedTheme.getDescription(),
-                savedTheme.getThumbnail()
-        );
+        return ThemeResponse.from(savedTheme);
     }
 
-    private void validateTheme(ThemeRegister themeRegister) {
-        boolean duplicatedNameExisted = themeRepository.isDuplicatedName(themeRegister.name());
+    private void validateDuplicateTheme(ThemeRegister request) {
+        boolean duplicatedNameExisted = themeRepository.isDuplicatedName(request.name());
         if (duplicatedNameExisted) {
             throw new DuplicatedException("중복된 테마명은 등록할 수 없습니다.");
         }
     }
 
+    @Transactional
     public void deleteTheme(Long id) {
-        try {
-            themeRepository.deleteById(id);
-        } catch (DataIntegrityViolationException e) {
-            throw new ResourceInUseException("삭제하고자 하는 테마에 예약된 정보가 있습니다.");
-        }
-    }
-
-    public List<ThemeResponse> findPopularThemes(String date) {
-        LocalDate parsedDate = LocalDate.parse(date);
-        Period period = new Period(parsedDate, parsedDate.minusDays(POPULAR_DAY_RANGE));
-
-        return themeRepository.findPopularThemesInPeriod(period, POPULAR_THEME_SIZE).stream()
-                .map(theme -> new ThemeResponse(
-                        theme.getId(),
-                        theme.getName(),
-                        theme.getDescription(),
-                        theme.getThumbnail()))
-                .toList();
+        themeRepository.deleteById(id);
     }
 }
-
-

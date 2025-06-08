@@ -32,7 +32,8 @@ public class TossPayment {
     @JoinColumn(name = "reservation_ticket_id", nullable = false)
     private ReservationTicket reservationTicket;
 
-    public TossPayment(String paymentKey, String orderId, String status, ReservationTicket reservationTicket) {
+    public TossPayment(
+        String paymentKey, String orderId, String status, ReservationTicket reservationTicket) {
         this.paymentKey = paymentKey;
         this.orderId = orderId;
         this.status = status;

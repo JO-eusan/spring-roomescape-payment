@@ -97,7 +97,7 @@ public class WaitingServiceTest {
             );
 
             // when
-            waitingService.registerWaiting(waitingRegister, loginMember);
+            waitingService.saveWaiting(waitingRegister, loginMember);
 
             // then
             assertAll(
@@ -154,7 +154,7 @@ public class WaitingServiceTest {
             );
 
             // when
-            assertThatThrownBy(() -> waitingService.registerWaiting(waitingRegister, loginMember))
+            assertThatThrownBy(() -> waitingService.saveWaiting(waitingRegister, loginMember))
                     .isInstanceOf(IllegalStateException.class);
         }
 
@@ -278,7 +278,7 @@ public class WaitingServiceTest {
             ));
 
             // when
-            List<UserWaitingResponse> myWaitings = waitingService.getMyWaitings(loginMember);
+            List<UserWaitingResponse> myWaitings = waitingService.getUserWaitings(loginMember);
 
             // then
             List<Long> waitingIds = myWaitings.stream()
@@ -325,7 +325,7 @@ public class WaitingServiceTest {
             ));
 
             // when
-            List<UserWaitingResponse> myWaitings = waitingService.getMyWaitings(loginMember);
+            List<UserWaitingResponse> myWaitings = waitingService.getUserWaitings(loginMember);
 
             // then
             assertThat(myWaitings.getFirst().order()).isEqualTo(2);

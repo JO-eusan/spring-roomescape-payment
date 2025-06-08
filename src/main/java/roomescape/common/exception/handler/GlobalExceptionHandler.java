@@ -3,6 +3,7 @@ package roomescape.common.exception.handler;
 import java.util.zip.DataFormatException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.ResponseStatus;
@@ -37,6 +38,13 @@ public class GlobalExceptionHandler {
     public String handleException(Exception ex) {
         logger.error(ex.getMessage(), ex);
         return ex.getMessage();
+    }
+
+    @ExceptionHandler(DataIntegrityViolationException.class)
+    @ResponseStatus(HttpStatus.BAD_REQUEST)
+    public String handleDataIntegrityViolationException(DataIntegrityViolationException ex) {
+        logger.error(ex.getMessage(), ex);
+        return "연관된 데이터가 존재합니다.";
     }
 
     @ExceptionHandler(NoResourceFoundException.class)

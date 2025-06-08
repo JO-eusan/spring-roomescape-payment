@@ -1,4 +1,4 @@
-package roomescape.infrastructure;
+package roomescape.infrastructure.jwt;
 
 import java.time.LocalDate;
 import java.time.ZoneId;
@@ -11,7 +11,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.TestPropertySource;
 import roomescape.common.exception.UnauthorizedException;
-import roomescape.infrastructure.jwt.JwtTokenProvider;
 
 @TestPropertySource(properties = {
         "security.jwt.token.secret-key=your-secret-key",

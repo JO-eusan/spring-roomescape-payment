@@ -7,18 +7,18 @@ import java.util.Set;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 import lombok.RequiredArgsConstructor;
-import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.stereotype.Service;
-import roomescape.common.exception.DuplicatedException;
-import roomescape.common.exception.ResourceInUseException;
-import roomescape.dto.request.ReservationTimeRegister;
-import roomescape.dto.response.ReservationTimeResponse;
+import org.springframework.transaction.annotation.Transactional;
 import roomescape.business.model.ReservationTicket;
 import roomescape.business.model.ReservationTime;
+import roomescape.common.exception.DuplicatedException;
+import roomescape.dto.request.ReservationTimeRegister;
+import roomescape.dto.response.ReservationTimeResponse;
 import roomescape.persistence.ReservationTicketRepository;
 import roomescape.persistence.ReservationTimeRepository;
 
 @Service
+@Transactional(readOnly = true)
 @RequiredArgsConstructor
 public class ReservationTimeService {
 
@@ -28,25 +28,9 @@ public class ReservationTimeService {
     public List<ReservationTimeResponse> getAllTimes() {
         List<ReservationTime> reservationTimes = reservationTimeRepository.findAll();
 
-        return reservationTimes.stream().map(ReservationTimeResponse::from).toList();
-    }
-
-    public ReservationTimeResponse saveTime(
-        ReservationTimeRegister request) {
-        validateReservationTime(request);
-
-        ReservationTime reservationTime = new ReservationTime(request.startAt());
-        ReservationTime savedReservationTime = reservationTimeRepository.save(reservationTime);
-
-        return ReservationTimeResponse.from(savedReservationTime);
-    }
-
-    public void deleteTime(Long id) {
-        try {
-            reservationTimeRepository.deleteById(id);
-        } catch (DataIntegrityViolationException e) {
-            throw new ResourceInUseException("삭제하고자 하는 시각에 예약된 정보가 있습니다.");
-        }
+        return reservationTimes.stream()
+            .map(ReservationTimeResponse::from)
+            .toList();
     }
 
     public List<ReservationTimeResponse> getAvailableTimes(String date, Long themeId) {
@@ -98,12 +82,24 @@ public class ReservationTimeService {
             .toList();
     }
 
+    @Transactional
+    public ReservationTimeResponse saveTime(ReservationTimeRegister request) {
+        validateReservationTime(request);
+
+        ReservationTime savedReservationTime = reservationTimeRepository.save(
+            new ReservationTime(request.startAt()));
+
+        return ReservationTimeResponse.from(savedReservationTime);
+    }
+
     private void validateReservationTime(ReservationTimeRegister request) {
         if (reservationTimeRepository.isDuplicatedStartAt(request.startAt())) {
             throw new DuplicatedException("중복된 예약시각은 등록할 수 없습니다.");
         }
     }
+
+    @Transactional
+    public void deleteTime(Long id) {
+        reservationTimeRepository.deleteById(id);
+    }
 }
-
-
-

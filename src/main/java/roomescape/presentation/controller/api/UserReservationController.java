@@ -26,6 +26,6 @@ public class UserReservationController {
 
     @GetMapping("/waitings")
     public List<UserWaitingResponse> getUserWaitings(LoginMember loginMember) {
-        return waitingService.getMyWaitings(loginMember);
+        return waitingService.getUserWaitings(loginMember);
     }
 }

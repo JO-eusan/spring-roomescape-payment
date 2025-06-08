@@ -6,17 +6,17 @@ import java.util.List;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import roomescape.common.exception.OperationNotAllowedException;
-import roomescape.common.exception.UnauthorizedException;
-import roomescape.business.vo.LoginMember;
-import roomescape.dto.request.WaitingRegister;
-import roomescape.dto.response.UserWaitingResponse;
-import roomescape.dto.response.WaitingResponse;
 import roomescape.business.model.Member;
 import roomescape.business.model.Reservation;
 import roomescape.business.model.ReservationTime;
 import roomescape.business.model.Theme;
 import roomescape.business.model.Waiting;
+import roomescape.business.vo.LoginMember;
+import roomescape.common.exception.OperationNotAllowedException;
+import roomescape.common.exception.UnauthorizedException;
+import roomescape.dto.request.WaitingRegister;
+import roomescape.dto.response.UserWaitingResponse;
+import roomescape.dto.response.WaitingResponse;
 import roomescape.persistence.MemberRepository;
 import roomescape.persistence.ReservationTicketRepository;
 import roomescape.persistence.ReservationTimeRepository;
@@ -24,6 +24,7 @@ import roomescape.persistence.ThemeRepository;
 import roomescape.persistence.WaitingRepository;
 
 @Service
+@Transactional(readOnly = true)
 @RequiredArgsConstructor
 public class WaitingService {
 
@@ -33,28 +34,29 @@ public class WaitingService {
     private final ThemeRepository themeRepository;
     private final ReservationTicketRepository reservationTicketRepository;
 
+    public List<UserWaitingResponse> getUserWaitings(LoginMember loginMember) {
+        return waitingRepository.findByMemberId(loginMember.id()).stream()
+            .map(waiting -> UserWaitingResponse.from(
+                waiting, waitingRepository.countWaitingBefore(waiting) + 1L)).toList();
+    }
+
     @Transactional
-    public WaitingResponse registerWaiting(WaitingRegister request, LoginMember loginMember) {
-        Member member = memberRepository.findById(loginMember.id());
-        ReservationTime reservationTime = reservationTimeRepository.findById(
-            request.timeId());
-        Theme theme = themeRepository.findById(request.themeId());
-
-        Reservation reservation = new Reservation(
-            request.date(),
-            reservationTime,
-            theme,
-            member,
-            LocalDate.now()
-        );
-
+    public WaitingResponse saveWaiting(WaitingRegister request, LoginMember loginMember) {
+        Reservation reservation = createReservation(request, loginMember);
         validateReservationExistsForWaiting(reservation);
 
-        Waiting waiting = new Waiting(LocalDateTime.now(), reservation);
-
-        Waiting savedWaiting = waitingRepository.save(waiting);
+        Waiting savedWaiting = waitingRepository.save(
+            new Waiting(LocalDateTime.now(), reservation));
 
         return WaitingResponse.from(savedWaiting);
+    }
+
+    private Reservation createReservation(WaitingRegister request, LoginMember loginMember) {
+        Member member = memberRepository.findById(loginMember.id());
+        ReservationTime reservationTime = reservationTimeRepository.findById(request.timeId());
+        Theme theme = themeRepository.findById(request.themeId());
+
+        return new Reservation(request.date(), reservationTime, theme, member, LocalDate.now());
     }
 
     private void validateReservationExistsForWaiting(Reservation reservation) {
@@ -74,14 +76,4 @@ public class WaitingService {
 
         waitingRepository.delete(waiting);
     }
-
-    public List<UserWaitingResponse> getMyWaitings(LoginMember loginMember) {
-        List<Waiting> myWaitings = waitingRepository.findByMemberId(loginMember.id());
-
-        return myWaitings.stream()
-            .map(waiting -> UserWaitingResponse.from(waiting,
-                waitingRepository.countWaitingBefore(waiting) + 1L))
-            .toList();
-    }
 }
-

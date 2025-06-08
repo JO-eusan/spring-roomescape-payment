@@ -36,10 +36,10 @@ import roomescape.persistence.ReservationTimeRepository;
 
 @SpringBootTest(webEnvironment = WebEnvironment.DEFINED_PORT)
 @DirtiesContext(classMode = ClassMode.AFTER_EACH_TEST_METHOD)
-class ReservationPaymentServiceTest {
+class ReservationPaymentCoordinatorTest {
 
     @Autowired
-    ReservationPaymentService reservationPaymentService;
+    ReservationPaymentCoordinator reservationPaymentCoordinator;
 
     @MockitoBean
     TossPaymentRestClient tossPaymentRestClient;
@@ -81,7 +81,7 @@ class ReservationPaymentServiceTest {
             .thenReturn(tossPaymentResponse);
 
         // when
-        reservationPaymentService.saveReservationWithPayment(request, loginMember);
+        reservationPaymentCoordinator.saveReservationWithPayment(request, loginMember);
 
         // then
         assertAll(() -> {
@@ -113,7 +113,7 @@ class ReservationPaymentServiceTest {
 
         // when & then
         assertThatThrownBy(
-            () -> reservationPaymentService.saveReservationWithPayment(request,
+            () -> reservationPaymentCoordinator.saveReservationWithPayment(request,
                 loginMember)).isInstanceOf(
             PaymentClientException.class);
     }

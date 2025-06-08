@@ -1,4 +1,4 @@
-package roomescape.model;
+package roomescape.business.model;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
@@ -24,7 +24,7 @@ class ReservationTicketTest {
                 dateTime.toLocalDate(),
                 new ReservationTime(dateTime.toLocalTime()),
                 new Theme(1L, "공포", "무서워요", "image")
-                , new Member(1L, "히로", "example@gmail.com", "password", Role.ADMIN), LocalDate.now().minusDays(1))))
+                , new Member("히로", "example@gmail.com", "password", Role.ADMIN), LocalDate.now().minusDays(1))))
                 .isInstanceOf(IllegalStateException.class);
     }
 }

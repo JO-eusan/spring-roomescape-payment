@@ -26,7 +26,7 @@ public class WaitingController {
     @ResponseStatus(HttpStatus.CREATED)
     public WaitingResponse registerWaiting(
         @RequestBody @Valid WaitingRegister request, LoginMember loginMember) {
-        return waitingService.registerWaiting(request, loginMember);
+        return waitingService.saveWaiting(request, loginMember);
     }
 
     @DeleteMapping("/{id}")

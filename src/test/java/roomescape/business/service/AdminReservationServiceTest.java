@@ -116,7 +116,7 @@ class AdminReservationServiceTest {
         ));
 
         // when
-        adminReservationService.rejectWaiting(waiting.getId());
+        adminReservationService.rejectWaitingById(waiting.getId());
 
         // then
         List<Waiting> waitings = waitingJpaRepository.findAll();

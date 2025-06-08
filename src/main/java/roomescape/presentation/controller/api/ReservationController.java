@@ -13,7 +13,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 import roomescape.business.service.ReservationService;
-import roomescape.business.service.coordinator.ReservationPaymentService;
+import roomescape.business.service.coordinator.ReservationPaymentCoordinator;
 import roomescape.business.vo.LoginMember;
 import roomescape.dto.request.ReservationSearch;
 import roomescape.dto.request.UserReservationRegister;
@@ -25,7 +25,7 @@ import roomescape.dto.response.ReservationTicketResponse;
 public class ReservationController {
 
     private final ReservationService reservationService;
-    private final ReservationPaymentService reservationPaymentService;
+    private final ReservationPaymentCoordinator reservationPaymentCoordinator;
 
     @GetMapping
     public List<ReservationTicketResponse> getReservations() {
@@ -34,14 +34,14 @@ public class ReservationController {
 
     @GetMapping("/filter")
     public List<ReservationTicketResponse> getReservationsByFilter(ReservationSearch request) {
-        return reservationService.searchReservations(request);
+        return reservationService.getReservationByFilter(request);
     }
 
     @PostMapping("/toss")
     @ResponseStatus(HttpStatus.CREATED)
     public ReservationTicketResponse addReservation(
         @RequestBody @Valid UserReservationRegister request, LoginMember loginMember) {
-        return reservationPaymentService.saveReservationWithPayment(request, loginMember);
+        return reservationPaymentCoordinator.saveReservationWithPayment(request, loginMember);
     }
 
     @DeleteMapping("/{id}")

@@ -1,5 +1,6 @@
 package roomescape.persistence.implementation;
 
+import java.util.List;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Repository;
 import roomescape.business.model.Member;
@@ -12,6 +13,11 @@ import roomescape.persistence.MemberRepository;
 public class MemberRepositoryImpl implements MemberRepository {
 
     private final MemberJpaRepository memberJpaRepository;
+
+    @Override
+    public List<Member> findAll() {
+        return memberJpaRepository.findAll();
+    }
 
     @Override
     public Member findByEmail(String email) {

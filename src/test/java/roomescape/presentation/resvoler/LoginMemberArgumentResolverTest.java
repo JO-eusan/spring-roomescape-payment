@@ -48,7 +48,7 @@ class LoginMemberArgumentResolverTest {
         servletRequest.setCookies(new Cookie("token", token));
         NativeWebRequest webRequest = new ServletWebRequest(servletRequest);
 
-        Member member = new Member(1L, "히로", email, "password", Role.ADMIN);
+        Member member = new Member("히로", email, "password", Role.ADMIN);
         given(cookieUtils.getToken(servletRequest)).willReturn(token);
         given(authService.getAuthenticatedMember(token)).willReturn(member);
 

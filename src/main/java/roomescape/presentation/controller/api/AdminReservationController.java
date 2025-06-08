@@ -39,6 +39,6 @@ public class AdminReservationController {
     @DeleteMapping("/waitings/{id}")
     @ResponseStatus(HttpStatus.NO_CONTENT)
     public void rejectWaiting(@PathVariable Long id) {
-        adminReservationService.rejectWaiting(id);
+        adminReservationService.rejectWaitingById(id);
     }
 }
