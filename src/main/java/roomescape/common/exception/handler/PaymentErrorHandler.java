@@ -11,7 +11,7 @@ import org.springframework.web.client.ResponseErrorHandler;
 import roomescape.common.exception.PaymentClientException;
 import roomescape.common.exception.PaymentServerException;
 
-public class PaymentExceptionHandler implements ResponseErrorHandler {
+public class PaymentErrorHandler implements ResponseErrorHandler {
 
     @Override
     public boolean hasError(ClientHttpResponse response) throws IOException {
@@ -22,7 +22,7 @@ public class PaymentExceptionHandler implements ResponseErrorHandler {
     public void handleError(URI url, HttpMethod method, ClientHttpResponse response)
         throws IOException {
         InputStream inputStream = response.getBody();
-        String message = parseToTossPaymentErrorResponse(inputStream).message();
+        String message = parseToErrorResponse(inputStream).message();
 
         if (response.getStatusCode().is4xxClientError()) {
             throw new PaymentClientException(message);
@@ -31,17 +31,16 @@ public class PaymentExceptionHandler implements ResponseErrorHandler {
         }
     }
 
-    private TossPaymentErrorResponse parseToTossPaymentErrorResponse(InputStream bodyStream)
+    private TossPaymentErrorResponse parseToErrorResponse(InputStream bodyStream)
         throws IOException {
-        ObjectMapper mapper = new ObjectMapper()
-            .configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
+        ObjectMapper mapper = new ObjectMapper().configure(
+            DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
         return mapper.readValue(bodyStream, TossPaymentErrorResponse.class);
     }
 
     private record TossPaymentErrorResponse(
         String message,
-        String code
-    ) {
+        String code) {
 
     }
 }

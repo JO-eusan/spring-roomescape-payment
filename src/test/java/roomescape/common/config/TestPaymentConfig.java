@@ -5,7 +5,7 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.test.context.TestConfiguration;
 import org.springframework.context.annotation.Bean;
 import org.springframework.web.client.RestClient;
-import roomescape.common.exception.handler.PaymentExceptionHandler;
+import roomescape.common.exception.handler.PaymentErrorHandler;
 import roomescape.infrastructure.payment.TossPaymentRestClient;
 
 @TestConfiguration
@@ -22,7 +22,7 @@ public class TestPaymentConfig {
         return new TossPaymentRestClient(builder
             .baseUrl("https://api.tosspayments.com/v1/payments")
             .defaultHeader(AUTHORIZATION_HEADER, AUTHORIZATION_SCHEME + encodeSecretKey())
-            .defaultStatusHandler(new PaymentExceptionHandler())
+            .defaultStatusHandler(new PaymentErrorHandler())
             .build());
     }
 

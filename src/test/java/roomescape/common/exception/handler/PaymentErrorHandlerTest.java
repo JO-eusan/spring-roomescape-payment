@@ -23,7 +23,7 @@ import roomescape.infrastructure.payment.TossPaymentRestClient;
 
 @RestClientTest(value = TossPaymentRestClient.class)
 @Import(TestPaymentConfig.class)
-class PaymentExceptionHandlerTest {
+class PaymentErrorHandlerTest {
 
     @Autowired
     MockRestServiceServer server;
