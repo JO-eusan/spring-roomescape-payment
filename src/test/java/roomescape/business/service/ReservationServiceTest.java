@@ -18,7 +18,6 @@ import org.springframework.test.annotation.DirtiesContext;
 import roomescape.common.exception.DuplicatedException;
 import roomescape.business.vo.LoginMember;
 import roomescape.dto.request.UserReservationRegister;
-import roomescape.dto.response.UserReservationResponse;
 import roomescape.dto.response.ReservationTicketResponse;
 import roomescape.infrastructure.db.MemberJpaRepository;
 import roomescape.infrastructure.db.ThemeJpaRepository;
@@ -155,41 +154,6 @@ class ReservationServiceTest {
         // then
         List<ReservationTicketResponse> reservations = this.reservationService.getAllReservations();
         assertThat(reservations).isEmpty();
-    }
-
-    @DisplayName("사용자가 예약한 예약 내역을 모두 가져온다")
-    @Test
-    void test6() {
-        //given
-        ReservationTime reservationTime = new ReservationTime(LocalTime.of(12, 30));
-        ReservationTime savedReservationTime = reservationTimeRepository.save(reservationTime);
-
-        Theme theme = new Theme("테마", "공포", "image");
-        Theme savedTheme = themeJpaRepository.save(theme);
-
-        Member member = new Member("도기", "email@gamil.com", "password", Role.ADMIN);
-        Member savedMember = memberJpaRepository.save(member);
-
-        ReservationTicket reservationTicket = new ReservationTicket(
-            new Reservation(LocalDate.now().plusDays(1), savedReservationTime, savedTheme,
-                savedMember, LocalDate.now()));
-        ReservationTicket savedReservationTicket = reservationTicketRepository.save(
-            reservationTicket);
-
-        LoginMember loginMember = LoginMember.from(savedMember);
-
-        //when
-        List<UserReservationResponse> response = reservationService.getReservationsOfMember(
-            loginMember);
-
-        List<UserReservationResponse> comparedResponse = List.of(
-            UserReservationResponse.from(savedReservationTicket));
-
-        //then
-        assertAll(
-            () -> assertThat(response).hasSize(1),
-            () -> assertThat(response).isEqualTo(comparedResponse)
-        );
     }
 
     @DisplayName("사용자의 예약 내역 삭제 시에 가장 높은 우선순위의 웨이팅을 예약으로 전환해 저장한다")

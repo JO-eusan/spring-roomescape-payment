@@ -18,7 +18,6 @@ import roomescape.common.exception.DuplicatedException;
 import roomescape.dto.request.ReservationSearch;
 import roomescape.dto.request.UserReservationRegister;
 import roomescape.dto.response.ReservationTicketResponse;
-import roomescape.dto.response.UserReservationResponse;
 import roomescape.persistence.MemberRepository;
 import roomescape.persistence.ReservationTicketRepository;
 import roomescape.persistence.ReservationTimeRepository;
@@ -39,12 +38,6 @@ public class ReservationService {
     public List<ReservationTicketResponse> getAllReservations() {
         return reservationTicketRepository.findAll().stream()
             .map(ReservationTicketResponse::from)
-            .toList();
-    }
-
-    public List<UserReservationResponse> getReservationsOfMember(LoginMember loginMember) {
-        return reservationTicketRepository.findByMemberId(loginMember.id()).stream()
-            .map(UserReservationResponse::from)
             .toList();
     }
 

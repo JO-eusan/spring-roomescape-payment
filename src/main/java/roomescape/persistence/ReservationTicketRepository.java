@@ -11,8 +11,6 @@ public interface ReservationTicketRepository {
 
     List<ReservationTicket> findAll();
 
-    List<ReservationTicket> findByMemberId(Long memberId);
-
     List<ReservationTicket> findByThemeIdAndDate(Long themeId, LocalDate date);
 
     List<ReservationTicket> findByThemeIdAndMemberIdAndInPeriod(

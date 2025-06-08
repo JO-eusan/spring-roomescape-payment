@@ -7,10 +7,10 @@ import org.springframework.stereotype.Repository;
 import roomescape.business.model.Reservation;
 import roomescape.business.model.ReservationTicket;
 import roomescape.business.model.ReservationTime;
+import roomescape.business.vo.Period;
 import roomescape.common.exception.NotFoundException;
 import roomescape.infrastructure.db.ReservationTicketJpaRepository;
 import roomescape.persistence.ReservationTicketRepository;
-import roomescape.business.vo.Period;
 
 @Repository
 @RequiredArgsConstructor
@@ -21,11 +21,6 @@ public class ReservationTicketRepositoryImpl implements ReservationTicketReposit
     @Override
     public List<ReservationTicket> findAll() {
         return reservationTicketJpaRepository.findAll();
-    }
-
-    @Override
-    public List<ReservationTicket> findByMemberId(Long memberId) {
-        return reservationTicketJpaRepository.findByReservation_MemberId(memberId);
     }
 
     @Override

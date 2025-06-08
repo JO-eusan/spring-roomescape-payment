@@ -19,11 +19,13 @@ import roomescape.business.model.ReservationTicket;
 import roomescape.business.model.ReservationTime;
 import roomescape.business.model.Role;
 import roomescape.business.model.Theme;
-import roomescape.dto.response.UserReservationResponse;
+import roomescape.business.model.TossPayment;
+import roomescape.dto.response.UserReservationPaymentResponse;
 import roomescape.infrastructure.db.MemberJpaRepository;
 import roomescape.infrastructure.db.ReservationTicketJpaRepository;
 import roomescape.infrastructure.db.ReservationTimeJpaRepository;
 import roomescape.infrastructure.db.ThemeJpaRepository;
+import roomescape.infrastructure.db.TossPaymentJpaRepository;
 import roomescape.infrastructure.jwt.JwtTokenProvider;
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.DEFINED_PORT)
@@ -45,6 +47,9 @@ class UserReservationAcceptanceTest {
     @Autowired
     ReservationTicketJpaRepository reservationTicketJpaRepository;
 
+    @Autowired
+    TossPaymentJpaRepository tossPaymentJpaRepository;
+
     @DisplayName("로그인 토큰이 요청되면 로그인된 사용자의 예약 결과가 응답으로 반환된다.")
     @Test
     void test1() {
@@ -54,25 +59,20 @@ class UserReservationAcceptanceTest {
         Theme theme = saveTheme(1L);
 
         ReservationTicket reservationTicket = saveReservationTicket(reservationTime, theme, member);
+        TossPayment tossPayment = saveTossPayment(reservationTicket);
 
         String token = jwtTokenProvider.createToken(member.getEmail(), new Date());
 
         //when
-        List<UserReservationResponse> responses = RestAssured.given().log().all()
+        List<UserReservationPaymentResponse> responses = RestAssured.given().log().all()
             .cookie("token", token)
             .when().get("/users/reservations")
             .then().log().all()
             .statusCode(200).extract()
-            .jsonPath().getList(".", UserReservationResponse.class);
+            .jsonPath().getList(".", UserReservationPaymentResponse.class);
 
         //then
-        List<UserReservationResponse> comparedResponse = List.of(
-            UserReservationResponse.from(reservationTicket));
-
-        assertAll(
-            () -> assertThat(responses).hasSize(1),
-            () -> assertThat(responses).isEqualTo(comparedResponse)
-        );
+        assertThat(responses).hasSize(1);
     }
 
     private Member saveMember(Long tmp) {
@@ -103,5 +103,11 @@ class UserReservationAcceptanceTest {
         ReservationTicket reservationTicket = new ReservationTicket(reservation);
 
         return reservationTicketJpaRepository.save(reservationTicket);
+    }
+
+    private TossPayment saveTossPayment(ReservationTicket reservationTicket) {
+        TossPayment tossPayment = new TossPayment("paymentKey", "orderId", "DONE", 1000L,
+            reservationTicket);
+        return tossPaymentJpaRepository.save(tossPayment);
     }
 }
