@@ -167,7 +167,7 @@ class ReservationTicketAcceptanceTest {
         params.put("amount", "1000");
 
         TossPaymentResponse tossPaymentResponse = new TossPaymentResponse(
-            "DONE", "paymentKey", "orderId"
+            "DONE", "paymentKey", "orderId", 1000L
         );
 
         when(tossPaymentRestClient.requestConfirmation(any(TossPaymentConfirm.class)))

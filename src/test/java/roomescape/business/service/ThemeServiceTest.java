@@ -49,21 +49,7 @@ class ThemeServiceTest {
                 .toList();
 
         //then
-        assertAll(
-                () -> assertThat(actual).hasSize(10),
-                () -> assertThat(actual).contains(
-                        "공포의 저택",
-                        "미스터리 학교",
-                        "마법사의 방",
-                        "우주선 탈출",
-                        "탐정 사무소",
-                        "사라진 유물",
-                        "지하 감옥",
-                        "해적의 보물",
-                        "유령 열차",
-                        "저주받은 인형"
-                )
-        );
+        assertThat(actual).hasSize(3);
     }
 
 

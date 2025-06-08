@@ -72,7 +72,7 @@ public class TossPaymentServiceTest {
             time.getId(), theme.getId(), "paymentKey", "orderId", 1000L);
 
         TossPaymentResponse tossPaymentResponse = new TossPaymentResponse(
-            "DONE", "paymentKey", "orderId"
+            "DONE", "paymentKey", "orderId", 1000L
         );
 
         when(tossPaymentRestClient.requestConfirmation(any(TossPaymentConfirm.class)))
@@ -84,33 +84,6 @@ public class TossPaymentServiceTest {
         // then
         assertThat(tossPaymentJpaRepository.findAll()).hasSize(1);
     }
-
-//    @DisplayName("결제 승인 결과가 DONE 이 아니면 예외를 던진다")
-//    @Test
-//    void test2() {
-//        // given
-//        Member member = saveMember(1L);
-//        Theme theme = saveTheme(1L);
-//        ReservationTime time = saveTime(LocalTime.of(10, 0));
-//        LocalDate date = LocalDate.now().plusDays(1);
-//
-//        LoginMember loginMember = new LoginMember(member.getId(), member.getName(),
-//            member.getEmail(), member.getRole());
-//        ReservationTicketRegisterDto request = new ReservationTicketRegisterDto(date.toString(),
-//            time.getId(), theme.getId(), "paymentKey", "orderId", 1000L);
-//
-//        TossPaymentConfirmResponseDto tossPaymentConfirmResponseDto = new TossPaymentConfirmResponseDto(
-//            "ABORTED", "paymentKey", "orderId"
-//        );
-//
-//        when(tossPaymentWithRestClient.requestConfirmation(any(TossPaymentConfirmDto.class)))
-//            .thenReturn(tossPaymentConfirmResponseDto);
-//
-//        // when & then
-//        assertThatThrownBy(
-//            () -> tossPaymentService.savePayment(request, loginMember)).isInstanceOf(
-//            PaymentClientException.class);
-//    }
 
     private Member saveMember(Long tmp) {
         Member member = new Member("이름" + tmp, "이메일" + tmp, "비밀번호" + tmp, Role.USER);

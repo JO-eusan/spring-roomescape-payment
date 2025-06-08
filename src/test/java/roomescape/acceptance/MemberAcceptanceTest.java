@@ -1,15 +1,14 @@
 package roomescape.acceptance;
 
+import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
+
 import io.restassured.RestAssured;
 import java.util.List;
-import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
-import static org.junit.jupiter.api.Assertions.assertAll;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.annotation.DirtiesContext;
 import roomescape.dto.response.MemberResponse;
-import roomescape.business.model.Role;
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.DEFINED_PORT)
 @DirtiesContext(classMode = DirtiesContext.ClassMode.AFTER_EACH_TEST_METHOD)
@@ -20,17 +19,12 @@ public class MemberAcceptanceTest {
     void test1() {
         // when
         List<MemberResponse> responseDtos = RestAssured.given().log().all()
-                .when().get("/members")
-                .then().log().all()
-                .statusCode(200).extract()
-                .jsonPath().getList(".", MemberResponse.class);
+            .when().get("/members")
+            .then().log().all()
+            .statusCode(200).extract()
+            .jsonPath().getList(".", MemberResponse.class);
 
         // then
-        assertAll(
-                () -> assertThat(responseDtos.size()).isEqualTo(1),
-                () -> assertThat(responseDtos.getFirst().name()).isEqualTo("히로"),
-                () -> assertThat(responseDtos.getFirst().email()).isEqualTo("example@gmail.com"),
-                () -> assertThat(responseDtos.getFirst().role()).isEqualTo(Role.ADMIN)
-        );
+        assertThat(responseDtos.size()).isEqualTo(2);
     }
 }

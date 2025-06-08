@@ -25,7 +25,7 @@ class ReservationTicketAdminAcceptanceTest {
 
     @BeforeEach
     void setUp() {
-        final String email = "example@gmail.com";
+        final String email = "admin";
 
         this.token = jjwtJwtTokenProvider.createToken(email, new Date());
     }

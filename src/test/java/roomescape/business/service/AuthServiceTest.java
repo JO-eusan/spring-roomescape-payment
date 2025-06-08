@@ -35,8 +35,8 @@ public class AuthServiceTest {
 
     @BeforeEach
     void setUp() {
-        this.email = "example@gmail.com";
-        this.password = "password";
+        this.email = "user";
+        this.password = "1234";
     }
 
     @Test

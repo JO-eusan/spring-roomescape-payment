@@ -26,7 +26,7 @@ public class Reservation {
 
     public Reservation(LocalDate date, ReservationTime reservationTime, Theme theme, Member member,
         LocalDate today) {
-        validateReservationDateInFuture(today);
+        validateReservationDateInFuture(date, today);
 
         this.date = date;
         this.reservationTime = reservationTime;
@@ -34,8 +34,8 @@ public class Reservation {
         this.member = member;
     }
 
-    private void validateReservationDateInFuture(LocalDate today) {
-        if (!this.date.isAfter(today)) {
+    private void validateReservationDateInFuture(LocalDate date, LocalDate today) {
+        if (!date.isAfter(today)) {
             throw new IllegalStateException("과거 및 당일 예약은 불가능합니다.");
         }
     }

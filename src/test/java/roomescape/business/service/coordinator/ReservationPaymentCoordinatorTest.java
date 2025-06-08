@@ -74,7 +74,7 @@ class ReservationPaymentCoordinatorTest {
             time.getId(), theme.getId(), "paymentKey", "orderId", 1000L);
 
         TossPaymentResponse tossPaymentResponse = new TossPaymentResponse(
-            "DONE", "paymentKey", "orderId"
+            "DONE", "paymentKey", "orderId", 1000L
         );
 
         when(tossPaymentRestClient.requestConfirmation(any(TossPaymentConfirm.class)))
@@ -105,7 +105,7 @@ class ReservationPaymentCoordinatorTest {
             time.getId(), theme.getId(), "paymentKey", "orderId", 1000L);
 
         TossPaymentResponse tossPaymentResponse = new TossPaymentResponse(
-            "ABORTED", "paymentKey", "orderId"
+            "ABORTED", "paymentKey", "orderId", 1000L
         );
 
         when(tossPaymentRestClient.requestConfirmation(any(TossPaymentConfirm.class)))
