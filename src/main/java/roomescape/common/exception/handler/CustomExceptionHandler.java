@@ -14,7 +14,7 @@ import roomescape.common.exception.PaymentServerException;
 import roomescape.common.exception.ResourceInUseException;
 import roomescape.common.exception.UnauthorizedException;
 
-@RestControllerAdvice
+@RestControllerAdvice(basePackages = "roomescape")
 public class CustomExceptionHandler {
 
     private final Logger logger = LoggerFactory.getLogger(CustomExceptionHandler.class);

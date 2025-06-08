@@ -4,8 +4,6 @@ import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import java.io.IOException;
 import java.io.InputStream;
-import java.net.URI;
-import org.springframework.http.HttpMethod;
 import org.springframework.http.client.ClientHttpResponse;
 import org.springframework.web.client.ResponseErrorHandler;
 import roomescape.common.exception.PaymentClientException;
@@ -19,8 +17,7 @@ public class PaymentErrorHandler implements ResponseErrorHandler {
     }
 
     @Override
-    public void handleError(URI url, HttpMethod method, ClientHttpResponse response)
-        throws IOException {
+    public void handleError(ClientHttpResponse response) throws IOException {
         InputStream inputStream = response.getBody();
         String message = parseToErrorResponse(inputStream).message();
 
