@@ -16,7 +16,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.annotation.DirtiesContext;
 import roomescape.common.exception.DuplicatedException;
-import roomescape.dto.LoginMember;
+import roomescape.business.vo.LoginMember;
 import roomescape.dto.request.UserReservationRegister;
 import roomescape.dto.response.UserReservationResponse;
 import roomescape.dto.response.ReservationTicketResponse;
@@ -30,8 +30,8 @@ import roomescape.business.model.ReservationTime;
 import roomescape.business.model.Role;
 import roomescape.business.model.Theme;
 import roomescape.business.model.Waiting;
-import roomescape.persistence.repository.ReservationTicketRepository;
-import roomescape.persistence.repository.ReservationTimeRepository;
+import roomescape.persistence.ReservationTicketRepository;
+import roomescape.persistence.ReservationTimeRepository;
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.DEFINED_PORT)
 @DirtiesContext(classMode = DirtiesContext.ClassMode.AFTER_EACH_TEST_METHOD)
@@ -176,7 +176,7 @@ class ReservationServiceTest {
         ReservationTicket savedReservationTicket = reservationTicketRepository.save(
             reservationTicket);
 
-        LoginMember loginMember = new LoginMember(savedMember);
+        LoginMember loginMember = LoginMember.from(savedMember);
 
         //when
         List<UserReservationResponse> response = reservationService.getReservationsOfMember(

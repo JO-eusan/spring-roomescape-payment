@@ -14,7 +14,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.annotation.DirtiesContext;
 import org.springframework.test.annotation.DirtiesContext.ClassMode;
-import roomescape.dto.LoginMember;
+import roomescape.business.vo.LoginMember;
 import roomescape.infrastructure.db.MemberJpaRepository;
 import roomescape.infrastructure.db.ReservationTicketJpaRepository;
 import roomescape.infrastructure.db.ReservationTimeJpaRepository;
@@ -54,7 +54,7 @@ public class WaitingAcceptanceTest {
     void test1() {
         Member member = memberJpaRepository.save(
             new Member("name", "email@gmail.com", "password", Role.ADMIN));
-        LoginMember loginMember = new LoginMember(member);
+        LoginMember loginMember = LoginMember.from(member);
 
         Theme theme = themeJpaRepository.save(new Theme("새로운 테마", "새로운 설명", "썸네일"));
         ReservationTime reservationTime = reservationTimeJpaRepository.save(

@@ -9,7 +9,7 @@ import roomescape.dto.response.MemberResponse;
 import roomescape.dto.response.TokenResponse;
 import roomescape.infrastructure.jwt.JwtTokenProvider;
 import roomescape.business.model.Member;
-import roomescape.persistence.repository.MemberRepository;
+import roomescape.persistence.MemberRepository;
 
 @Service
 @RequiredArgsConstructor

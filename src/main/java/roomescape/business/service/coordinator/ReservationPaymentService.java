@@ -5,7 +5,7 @@ import org.springframework.stereotype.Service;
 import roomescape.business.service.ReservationService;
 import roomescape.business.service.TossPaymentService;
 import roomescape.common.exception.PaymentClientException;
-import roomescape.dto.LoginMember;
+import roomescape.business.vo.LoginMember;
 import roomescape.dto.request.UserReservationRegister;
 import roomescape.dto.response.ReservationTicketResponse;
 import roomescape.dto.response.TossPaymentResponse;

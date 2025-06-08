@@ -14,7 +14,7 @@ import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 import roomescape.business.service.ReservationService;
 import roomescape.business.service.coordinator.ReservationPaymentService;
-import roomescape.dto.LoginMember;
+import roomescape.business.vo.LoginMember;
 import roomescape.dto.request.ReservationSearch;
 import roomescape.dto.request.UserReservationRegister;
 import roomescape.dto.response.ReservationTicketResponse;

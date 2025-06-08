@@ -6,7 +6,7 @@ import java.util.Optional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import roomescape.common.exception.DuplicatedException;
-import roomescape.dto.LoginMember;
+import roomescape.business.vo.LoginMember;
 import roomescape.dto.request.ReservationSearch;
 import roomescape.dto.request.UserReservationRegister;
 import roomescape.dto.response.UserReservationResponse;
@@ -17,12 +17,12 @@ import roomescape.business.model.ReservationTicket;
 import roomescape.business.model.ReservationTime;
 import roomescape.business.model.Theme;
 import roomescape.business.model.Waiting;
-import roomescape.persistence.repository.MemberRepository;
-import roomescape.persistence.repository.ReservationTicketRepository;
-import roomescape.persistence.repository.ReservationTimeRepository;
-import roomescape.persistence.repository.ThemeRepository;
-import roomescape.persistence.repository.WaitingRepository;
-import roomescape.persistence.vo.Period;
+import roomescape.persistence.MemberRepository;
+import roomescape.persistence.ReservationTicketRepository;
+import roomescape.persistence.ReservationTimeRepository;
+import roomescape.persistence.ThemeRepository;
+import roomescape.persistence.WaitingRepository;
+import roomescape.business.vo.Period;
 
 @Service
 @RequiredArgsConstructor
@@ -41,7 +41,7 @@ public class ReservationService {
     }
 
     public List<UserReservationResponse> getReservationsOfMember(LoginMember loginMember) {
-        List<ReservationTicket> reservationTickets = reservationTicketRepository.findForMember(
+        List<ReservationTicket> reservationTickets = reservationTicketRepository.findByMemberId(
             loginMember.id());
 
         return reservationTickets.stream()
@@ -56,7 +56,7 @@ public class ReservationService {
         LocalDate startDate = reservationSearch.startDate();
         LocalDate endDate = reservationSearch.endDate();
 
-        return reservationTicketRepository.findForThemeAndMemberInPeriod(
+        return reservationTicketRepository.findByThemeIdAndMemberIdAndInPeriod(
                 themeId,
                 memberId,
                 new Period(startDate, endDate)

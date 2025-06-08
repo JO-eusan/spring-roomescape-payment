@@ -15,7 +15,7 @@ import roomescape.common.exception.NotFoundException;
 import roomescape.common.exception.UnauthorizedException;
 import roomescape.dto.request.LoginRequest;
 import roomescape.infrastructure.jwt.JwtTokenProvider;
-import roomescape.persistence.repository.MemberRepository;
+import roomescape.persistence.MemberRepository;
 
 @SpringBootTest(webEnvironment = WebEnvironment.DEFINED_PORT)
 @DirtiesContext(classMode = ClassMode.AFTER_EACH_TEST_METHOD)

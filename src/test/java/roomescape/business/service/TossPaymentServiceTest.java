@@ -30,8 +30,8 @@ import roomescape.business.model.ReservationTicket;
 import roomescape.business.model.ReservationTime;
 import roomescape.business.model.Role;
 import roomescape.business.model.Theme;
-import roomescape.persistence.repository.ReservationTicketRepository;
-import roomescape.persistence.repository.ReservationTimeRepository;
+import roomescape.persistence.ReservationTicketRepository;
+import roomescape.persistence.ReservationTimeRepository;
 
 @SpringBootTest(webEnvironment = WebEnvironment.DEFINED_PORT)
 @DirtiesContext(classMode = ClassMode.AFTER_EACH_TEST_METHOD)

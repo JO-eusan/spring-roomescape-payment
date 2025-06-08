@@ -1,4 +1,4 @@
-package roomescape.persistence.repository;
+package roomescape.persistence;
 
 import java.time.LocalTime;
 import java.util.List;
@@ -6,11 +6,11 @@ import roomescape.business.model.ReservationTime;
 
 public interface ReservationTimeRepository {
 
-    boolean isDuplicatedStartAt(LocalTime startAt);
+    List<ReservationTime> findAll();
 
     ReservationTime findById(Long id);
 
-    List<ReservationTime> findAll();
+    boolean isDuplicatedStartAt(LocalTime startAt);
 
     ReservationTime save(ReservationTime reservationTime);
 

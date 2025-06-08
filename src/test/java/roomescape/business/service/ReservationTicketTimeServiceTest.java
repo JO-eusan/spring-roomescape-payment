@@ -13,7 +13,7 @@ import org.springframework.test.annotation.DirtiesContext;
 import org.springframework.test.annotation.DirtiesContext.ClassMode;
 import roomescape.dto.request.ReservationTimeRegister;
 import roomescape.dto.response.ReservationTimeResponse;
-import roomescape.persistence.repository.ReservationTicketRepository;
+import roomescape.persistence.ReservationTicketRepository;
 
 @SpringBootTest(webEnvironment = WebEnvironment.DEFINED_PORT)
 @DirtiesContext(classMode = ClassMode.AFTER_EACH_TEST_METHOD)

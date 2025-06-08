@@ -3,27 +3,25 @@ package roomescape.business.service;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.List;
-import java.util.Optional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import roomescape.common.exception.OperationNotAllowedException;
 import roomescape.common.exception.UnauthorizedException;
-import roomescape.dto.LoginMember;
+import roomescape.business.vo.LoginMember;
 import roomescape.dto.request.WaitingRegister;
 import roomescape.dto.response.UserWaitingResponse;
 import roomescape.dto.response.WaitingResponse;
 import roomescape.business.model.Member;
 import roomescape.business.model.Reservation;
-import roomescape.business.model.ReservationTicket;
 import roomescape.business.model.ReservationTime;
 import roomescape.business.model.Theme;
 import roomescape.business.model.Waiting;
-import roomescape.persistence.repository.MemberRepository;
-import roomescape.persistence.repository.ReservationTicketRepository;
-import roomescape.persistence.repository.ReservationTimeRepository;
-import roomescape.persistence.repository.ThemeRepository;
-import roomescape.persistence.repository.WaitingRepository;
+import roomescape.persistence.MemberRepository;
+import roomescape.persistence.ReservationTicketRepository;
+import roomescape.persistence.ReservationTimeRepository;
+import roomescape.persistence.ThemeRepository;
+import roomescape.persistence.WaitingRepository;
 
 @Service
 @RequiredArgsConstructor
@@ -60,10 +58,7 @@ public class WaitingService {
     }
 
     private void validateReservationExistsForWaiting(Reservation reservation) {
-        Optional<ReservationTicket> foundReservationTicket = reservationTicketRepository.findForThemeAndReservationTimeOnDate(
-            reservation);
-
-        if (foundReservationTicket.isEmpty()) {
+        if (!reservationTicketRepository.isExistForThemeAndReservationTimeOnDate(reservation)) {
             throw new OperationNotAllowedException("예약 내역이 존재하지 않아 대기를 등록할 수 없습니다.");
         }
     }
@@ -81,7 +76,7 @@ public class WaitingService {
     }
 
     public List<UserWaitingResponse> getMyWaitings(LoginMember loginMember) {
-        List<Waiting> myWaitings = waitingRepository.findForMember(loginMember.id());
+        List<Waiting> myWaitings = waitingRepository.findByMemberId(loginMember.id());
 
         return myWaitings.stream()
             .map(waiting -> UserWaitingResponse.from(waiting,

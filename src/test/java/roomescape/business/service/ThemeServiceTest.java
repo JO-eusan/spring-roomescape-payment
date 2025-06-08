@@ -13,10 +13,10 @@ import org.springframework.test.annotation.DirtiesContext.ClassMode;
 import roomescape.dto.request.ThemeRegister;
 import roomescape.dto.response.ThemeResponse;
 import roomescape.business.model.Theme;
-import roomescape.persistence.repository.MemberRepository;
-import roomescape.persistence.repository.ReservationTicketRepository;
-import roomescape.persistence.repository.ReservationTimeRepository;
-import roomescape.persistence.repository.ThemeRepository;
+import roomescape.persistence.MemberRepository;
+import roomescape.persistence.ReservationTicketRepository;
+import roomescape.persistence.ReservationTimeRepository;
+import roomescape.persistence.ThemeRepository;
 
 @SpringBootTest(webEnvironment = WebEnvironment.DEFINED_PORT)
 @DirtiesContext(classMode = ClassMode.AFTER_EACH_TEST_METHOD)

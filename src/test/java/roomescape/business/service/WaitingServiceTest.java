@@ -18,7 +18,7 @@ import org.springframework.test.annotation.DirtiesContext;
 import org.springframework.test.annotation.DirtiesContext.ClassMode;
 import roomescape.common.exception.NotFoundException;
 import roomescape.common.exception.UnauthorizedException;
-import roomescape.dto.LoginMember;
+import roomescape.business.vo.LoginMember;
 import roomescape.dto.request.WaitingRegister;
 import roomescape.dto.response.UserWaitingResponse;
 import roomescape.infrastructure.db.MemberJpaRepository;
@@ -73,7 +73,7 @@ public class WaitingServiceTest {
             // given
             Member user = memberJpaRepository.save(
                     new Member("사용자", "user@gmail.com", "password", Role.USER));
-            LoginMember loginMember = new LoginMember(user);
+            LoginMember loginMember = LoginMember.from(user);
 
             Theme theme = themeJpaRepository.save(new Theme("새로운 테마", "새로운 설명", "썸네일"));
             ReservationTime reservationTime = reservationTimeJpaRepository.save(
@@ -130,7 +130,7 @@ public class WaitingServiceTest {
         void test2() {
             // given
             Member member = memberJpaRepository.save(new Member("이름", "email@gmail.com", "password", Role.ADMIN));
-            LoginMember loginMember = new LoginMember(member);
+            LoginMember loginMember = LoginMember.from(member);
 
             ReservationTime reservationTime = reservationTimeJpaRepository.save(
                     new ReservationTime(LocalTime.of(12, 30)));
@@ -169,7 +169,7 @@ public class WaitingServiceTest {
         void test1() {
             // given
             Member member = memberJpaRepository.save(new Member("이름", "email@gmail.com", "password", Role.ADMIN));
-            LoginMember loginMember = new LoginMember(member);
+            LoginMember loginMember = LoginMember.from(member);
 
             // when
             assertThatThrownBy(() -> waitingService.deleteWaiting(999L, loginMember))
@@ -183,7 +183,7 @@ public class WaitingServiceTest {
             Member owner = memberJpaRepository.save(new Member("이름", "email@gmail.com", "password", Role.ADMIN));
             Member invalidOwner = memberJpaRepository.save(
                     new Member("다른 이름", "example@gmail.com", "password", Role.ADMIN));
-            LoginMember loginMember = new LoginMember(invalidOwner);
+            LoginMember loginMember = LoginMember.from(invalidOwner);
 
             Theme theme = themeJpaRepository.save(new Theme("새로운 테마", "새로운 설명", "썸네일"));
             ReservationTime reservationTime = reservationTimeJpaRepository.save(
@@ -210,7 +210,7 @@ public class WaitingServiceTest {
         void test3() {
             // given
             Member owner = memberJpaRepository.save(new Member("이름", "email@gmail.com", "password", Role.ADMIN));
-            LoginMember loginMember = new LoginMember(owner);
+            LoginMember loginMember = LoginMember.from(owner);
 
             Theme theme = themeJpaRepository.save(new Theme("새로운 테마", "새로운 설명", "썸네일"));
             ReservationTime reservationTime = reservationTimeJpaRepository.save(
@@ -247,7 +247,7 @@ public class WaitingServiceTest {
             Member owner = memberJpaRepository.save(new Member("이름", "email@gmail.com", "password", Role.ADMIN));
             Member anotherOwner = memberJpaRepository.save(
                     new Member("주인아님", "anotherOwner@gmail.com", "password", Role.ADMIN));
-            LoginMember loginMember = new LoginMember(owner);
+            LoginMember loginMember = LoginMember.from(owner);
 
             Theme theme = themeJpaRepository.save(new Theme("새로운 테마", "새로운 설명", "썸네일"));
             ReservationTime reservationTime = reservationTimeJpaRepository.save(
@@ -296,7 +296,7 @@ public class WaitingServiceTest {
             Member owner = memberJpaRepository.save(new Member("이름", "email@gmail.com", "password", Role.ADMIN));
             Member anotherOwner = memberJpaRepository.save(
                     new Member("주인아님", "anotherOwner@gmail.com", "password", Role.ADMIN));
-            LoginMember loginMember = new LoginMember(owner);
+            LoginMember loginMember = LoginMember.from(owner);
 
             Theme theme = themeJpaRepository.save(new Theme("새로운 테마", "새로운 설명", "썸네일"));
             ReservationTime reservationTime = reservationTimeJpaRepository.save(

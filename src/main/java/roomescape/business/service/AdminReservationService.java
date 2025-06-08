@@ -12,11 +12,11 @@ import roomescape.business.model.Reservation;
 import roomescape.business.model.ReservationTicket;
 import roomescape.business.model.ReservationTime;
 import roomescape.business.model.Theme;
-import roomescape.persistence.repository.MemberRepository;
-import roomescape.persistence.repository.ReservationTicketRepository;
-import roomescape.persistence.repository.ReservationTimeRepository;
-import roomescape.persistence.repository.ThemeRepository;
-import roomescape.persistence.repository.WaitingRepository;
+import roomescape.persistence.MemberRepository;
+import roomescape.persistence.ReservationTicketRepository;
+import roomescape.persistence.ReservationTimeRepository;
+import roomescape.persistence.ThemeRepository;
+import roomescape.persistence.WaitingRepository;
 
 @Service
 @RequiredArgsConstructor
@@ -49,6 +49,6 @@ public class AdminReservationService {
     }
 
     public void rejectWaiting(Long id) {
-        waitingRepository.rejectById(id);
+        waitingRepository.deleteById(id);
     }
 }

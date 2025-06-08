@@ -7,8 +7,8 @@ import roomescape.dto.request.UserReservationRegister;
 import roomescape.dto.response.TossPaymentResponse;
 import roomescape.infrastructure.payment.TossPaymentRestClient;
 import roomescape.business.model.TossPayment;
-import roomescape.persistence.repository.ReservationTicketRepository;
-import roomescape.persistence.repository.TossPaymentRepository;
+import roomescape.persistence.ReservationTicketRepository;
+import roomescape.persistence.TossPaymentRepository;
 
 @Service
 @RequiredArgsConstructor

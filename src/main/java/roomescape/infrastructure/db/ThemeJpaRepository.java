@@ -9,21 +9,20 @@ import roomescape.business.model.Theme;
 
 public interface ThemeJpaRepository extends JpaRepository<Theme, Long> {
 
-    boolean existsByName(String name);
-
     @Query(value = """
-            SELECT t.*
-            FROM theme t
-            INNER JOIN reservation_ticket r ON t.id = r.theme_id
-            WHERE r.date >= :startDate
-            AND r.date <  :endDate
-            GROUP BY t.id
-            ORDER BY COUNT(r.id) DESC
-            LIMIT :size
-            """, nativeQuery = true)
+        SELECT t.*
+        FROM theme t
+        INNER JOIN reservation_ticket r ON t.id = r.theme_id
+        WHERE r.date >= :startDate
+        AND r.date <  :endDate
+        GROUP BY t.id
+        ORDER BY COUNT(r.id) DESC
+        LIMIT :size
+        """, nativeQuery = true)
     List<Theme> findTopReservedThemesSince(
-            @Param("startDate") LocalDate startDate,
-            @Param("endDate") LocalDate endDate,
-            @Param("size") int size
-    );
+        @Param("startDate") LocalDate startDate,
+        @Param("endDate") LocalDate endDate,
+        @Param("size") int size);
+
+    boolean existsByName(String name);
 }
