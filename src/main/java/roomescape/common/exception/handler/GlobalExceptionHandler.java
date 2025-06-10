@@ -45,7 +45,6 @@ public class GlobalExceptionHandler {
     @ResponseStatus(HttpStatus.BAD_REQUEST)
     public String handleDataIntegrityViolationException(DataIntegrityViolationException e,
         HttpServletRequest request) {
-        log.error(LOGGING_FORMAT, request.getMethod(), request.getRequestURI(), e.getMessage(), e);
         return "연관된 데이터가 존재합니다.";
     }
 
