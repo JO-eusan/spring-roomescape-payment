@@ -18,7 +18,7 @@ import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.support.GeneratedKeyHolder;
 import org.springframework.jdbc.support.KeyHolder;
 import org.springframework.test.annotation.DirtiesContext;
-import roomescape.dto.response.ThemeResponseDto;
+import roomescape.dto.response.ThemeResponse;
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.DEFINED_PORT)
 @DirtiesContext(classMode = DirtiesContext.ClassMode.AFTER_EACH_TEST_METHOD)
@@ -31,11 +31,11 @@ class ThemeAcceptanceTest {
     @DisplayName("테마 조회 시 저장된 테마 내역을 모두 가져온다")
     void test1() {
         // given
-        List<ThemeResponseDto> reservationTimes = RestAssured.given().log().all()
+        List<ThemeResponse> reservationTimes = RestAssured.given().log().all()
                 .when().get("/themes")
                 .then().log().all()
                 .statusCode(200).extract()
-                .jsonPath().getList(".", ThemeResponseDto.class);
+                .jsonPath().getList(".", ThemeResponse.class);
 
         Integer count = jdbcTemplate.queryForObject("SELECT count(1) from theme", Integer.class);
 

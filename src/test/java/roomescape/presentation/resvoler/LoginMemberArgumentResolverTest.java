@@ -16,11 +16,11 @@ import org.springframework.web.bind.support.WebDataBinderFactory;
 import org.springframework.web.context.request.NativeWebRequest;
 import org.springframework.web.context.request.ServletWebRequest;
 import org.springframework.web.method.support.ModelAndViewContainer;
-import roomescape.dto.LoginMember;
-import roomescape.model.Member;
-import roomescape.model.Role;
+import roomescape.business.vo.LoginMember;
+import roomescape.business.model.Member;
+import roomescape.business.model.Role;
 import roomescape.presentation.support.CookieUtils;
-import roomescape.application.service.AuthService;
+import roomescape.business.service.AuthService;
 
 @ExtendWith(MockitoExtension.class)
 class LoginMemberArgumentResolverTest {
@@ -48,7 +48,7 @@ class LoginMemberArgumentResolverTest {
         servletRequest.setCookies(new Cookie("token", token));
         NativeWebRequest webRequest = new ServletWebRequest(servletRequest);
 
-        Member member = new Member(1L, "히로", email, "password", Role.ADMIN);
+        Member member = new Member("히로", email, "password", Role.ADMIN);
         given(cookieUtils.getToken(servletRequest)).willReturn(token);
         given(authService.getAuthenticatedMember(token)).willReturn(member);
 

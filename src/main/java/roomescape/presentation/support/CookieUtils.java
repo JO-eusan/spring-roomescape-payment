@@ -19,6 +19,14 @@ public class CookieUtils {
         response.addCookie(cookie);
     }
 
+    public void setExpiredCookie(HttpServletResponse response, String token) {
+        Cookie cookie = new Cookie(COOKIE_NAME_FOR_TOKEN, token);
+        cookie.setHttpOnly(true);
+        cookie.setPath("/");
+        cookie.setMaxAge(0);
+        response.addCookie(cookie);
+    }
+
     public String getToken(HttpServletRequest request) {
         Cookie[] cookies = request.getCookies();
 
@@ -27,9 +35,9 @@ public class CookieUtils {
         }
 
         Cookie foundCookie = Arrays.stream(cookies)
-                .filter(cookie -> cookie.getName().equals(COOKIE_NAME_FOR_TOKEN))
-                .findFirst()
-                .orElseThrow(() -> new UnauthorizedException("쿠키에 권한 정보가 포함되어 있지 않습니다."));
+            .filter(cookie -> cookie.getName().equals(COOKIE_NAME_FOR_TOKEN))
+            .findFirst()
+            .orElseThrow(() -> new UnauthorizedException("쿠키에 권한 정보가 포함되어 있지 않습니다."));
 
         return foundCookie.getValue();
     }
@@ -41,6 +49,6 @@ public class CookieUtils {
             return false;
         }
         return Arrays.stream(cookies)
-                .anyMatch(cookie -> cookie.getName().equals("token"));
+            .anyMatch(cookie -> cookie.getName().equals("token"));
     }
 }

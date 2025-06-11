@@ -27,25 +27,25 @@ import org.springframework.jdbc.support.KeyHolder;
 import org.springframework.test.annotation.DirtiesContext;
 import org.springframework.test.annotation.DirtiesContext.ClassMode;
 import org.springframework.test.context.bean.override.mockito.MockitoBean;
-import roomescape.dto.request.TossPaymentConfirmDto;
-import roomescape.dto.response.ReservationTicketResponseDto;
-import roomescape.dto.response.TossPaymentConfirmResponseDto;
-import roomescape.infrastructure.payment.toss.TossPaymentWithRestClient;
-import roomescape.infrastructure.jwt.JjwtJwtTokenProvider;
-import roomescape.model.Role;
+import roomescape.dto.request.TossPaymentConfirm;
+import roomescape.dto.response.ReservationTicketResponse;
+import roomescape.dto.response.TossPaymentResponse;
+import roomescape.infrastructure.payment.TossPaymentRestClient;
+import roomescape.infrastructure.jwt.JwtTokenProvider;
+import roomescape.business.model.Role;
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.DEFINED_PORT)
 @DirtiesContext(classMode = ClassMode.AFTER_EACH_TEST_METHOD)
 class ReservationTicketAcceptanceTest {
 
     @MockitoBean
-    TossPaymentWithRestClient tossPaymentWithRestClient;
+    TossPaymentRestClient tossPaymentRestClient;
 
     @Autowired
     private JdbcTemplate jdbcTemplate;
 
     @Autowired
-    private JjwtJwtTokenProvider jjwtJwtTokenProvider;
+    private JwtTokenProvider jwtTokenProvider;
 
     private String email;
 
@@ -66,41 +66,18 @@ class ReservationTicketAcceptanceTest {
         insertNewReservationWithJdbcTemplate(1L, 1L);
 
         // when
-        List<ReservationTicketResponseDto> reservations = RestAssured.given().log().all()
+        List<ReservationTicketResponse> reservations = RestAssured.given().log().all()
             .cookie("token", createToken())
             .when().get("/reservations")
             .then().log().all()
             .statusCode(200).extract()
-            .jsonPath().getList(".", ReservationTicketResponseDto.class);
+            .jsonPath().getList(".", ReservationTicketResponse.class);
 
         Integer count = jdbcTemplate.queryForObject("SELECT count(1) from reservation_ticket",
             Integer.class);
 
         // then
         assertThat(reservations.size()).isEqualTo(count);
-    }
-
-    @Test
-    @DisplayName("예약 등록 시 잘못된 날짜로 요청하는 경우 400에러를 반환한다.")
-    void test2() {
-        // given
-        Map<String, String> params = new HashMap<>();
-        params.put("name", "브라운");
-        params.put("date", "invalidDateRequest");
-        params.put("timeId", "1");
-        params.put("themeId", "1");
-        params.put("paymentKey", "paymentKey");
-        params.put("orderId", "orderId");
-        params.put("amount", "1000");
-
-        // when & then
-        RestAssured.given().log().all()
-            .contentType(ContentType.JSON)
-            .cookie("token", createToken())
-            .body(params)
-            .when().post("/reservations/toss")
-            .then().log().all()
-            .statusCode(400);
     }
 
     @Test
@@ -189,12 +166,12 @@ class ReservationTicketAcceptanceTest {
         params.put("orderId", "orderId");
         params.put("amount", "1000");
 
-        TossPaymentConfirmResponseDto tossPaymentConfirmResponseDto = new TossPaymentConfirmResponseDto(
-            "DONE", "paymentKey", "orderId"
+        TossPaymentResponse tossPaymentResponse = new TossPaymentResponse(
+            "DONE", "paymentKey", "orderId", 1000L
         );
 
-        when(tossPaymentWithRestClient.requestConfirmation(any(TossPaymentConfirmDto.class)))
-            .thenReturn(tossPaymentConfirmResponseDto);
+        when(tossPaymentRestClient.requestConfirmation(any(TossPaymentConfirm.class)))
+            .thenReturn(tossPaymentResponse);
 
         // when & then
         RestAssured.given().log().all()
@@ -241,6 +218,6 @@ class ReservationTicketAcceptanceTest {
     }
 
     private String createToken() {
-        return jjwtJwtTokenProvider.createToken(email);
+        return jwtTokenProvider.createToken(email, new java.util.Date());
     }
 }

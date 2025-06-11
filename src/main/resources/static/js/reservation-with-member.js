@@ -207,7 +207,7 @@ function applyFilter(event) {
     if (dateFrom) params.append("dateFrom", dateFrom);
     if (dateTo) params.append("dateTo", dateTo);
 
-    fetch(`${RESERVATION_API_ENDPOINT}?${params.toString()}`, {
+    fetch(`${RESERVATION_API_ENDPOINT}/filter?${params.toString()}`, {
         method: 'GET',
         headers: {
             'Content-Type': 'application/json'

@@ -5,6 +5,7 @@ import io.restassured.http.ContentType;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
 import org.junit.jupiter.api.DisplayName;
@@ -13,20 +14,20 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.annotation.DirtiesContext;
 import org.springframework.test.annotation.DirtiesContext.ClassMode;
-import roomescape.application.provider.JwtTokenProvider;
-import roomescape.dto.LoginMember;
+import roomescape.business.vo.LoginMember;
 import roomescape.infrastructure.db.MemberJpaRepository;
 import roomescape.infrastructure.db.ReservationTicketJpaRepository;
 import roomescape.infrastructure.db.ReservationTimeJpaRepository;
 import roomescape.infrastructure.db.ThemeJpaRepository;
 import roomescape.infrastructure.db.WaitingJpaRepository;
-import roomescape.model.Member;
-import roomescape.model.Reservation;
-import roomescape.model.ReservationTicket;
-import roomescape.model.ReservationTime;
-import roomescape.model.Role;
-import roomescape.model.Theme;
-import roomescape.model.Waiting;
+import roomescape.infrastructure.jwt.JwtTokenProvider;
+import roomescape.business.model.Member;
+import roomescape.business.model.Reservation;
+import roomescape.business.model.ReservationTicket;
+import roomescape.business.model.ReservationTime;
+import roomescape.business.model.Role;
+import roomescape.business.model.Theme;
+import roomescape.business.model.Waiting;
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.DEFINED_PORT)
 @DirtiesContext(classMode = ClassMode.AFTER_EACH_TEST_METHOD)
@@ -53,7 +54,7 @@ public class WaitingAcceptanceTest {
     void test1() {
         Member member = memberJpaRepository.save(
             new Member("name", "email@gmail.com", "password", Role.ADMIN));
-        LoginMember loginMember = new LoginMember(member);
+        LoginMember loginMember = LoginMember.from(member);
 
         Theme theme = themeJpaRepository.save(new Theme("새로운 테마", "새로운 설명", "썸네일"));
         ReservationTime reservationTime = reservationTimeJpaRepository.save(
@@ -71,16 +72,16 @@ public class WaitingAcceptanceTest {
             )));
 
         Map<String, String> params = new HashMap<>();
-        params.put("theme", theme.getId().toString());
-        params.put("time", reservationTime.getId().toString());
+        params.put("themeId", theme.getId().toString());
+        params.put("timeId", reservationTime.getId().toString());
         params.put("date", String.valueOf(date));
 
         // when & then
         RestAssured.given().log().all()
             .contentType(ContentType.JSON)
-            .cookie("token", jwtTokenProvider.createToken(member.getEmail()))
+            .cookie("token", jwtTokenProvider.createToken(member.getEmail(), new Date()))
             .body(params)
-            .when().post("/waiting")
+            .when().post("/waitings")
             .then().log().all()
             .statusCode(201);
     }
@@ -106,8 +107,8 @@ public class WaitingAcceptanceTest {
         // when
         RestAssured.given().log().all()
             .contentType(ContentType.JSON)
-            .cookie("token", jwtTokenProvider.createToken(member.getEmail()))
-            .when().delete("/waiting/" + waiting.getId())
+            .cookie("token", jwtTokenProvider.createToken(member.getEmail(), new Date()))
+            .when().delete("/waitings/" + waiting.getId())
             .then().log().all()
             .statusCode(204);
     }

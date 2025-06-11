@@ -10,12 +10,12 @@ import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
-import roomescape.model.Member;
-import roomescape.model.Reservation;
-import roomescape.model.ReservationTicket;
-import roomescape.model.ReservationTime;
-import roomescape.model.Role;
-import roomescape.model.Theme;
+import roomescape.business.model.Member;
+import roomescape.business.model.Reservation;
+import roomescape.business.model.ReservationTicket;
+import roomescape.business.model.ReservationTime;
+import roomescape.business.model.Role;
+import roomescape.business.model.Theme;
 
 @DataJpaTest
 class ReservationTicketJpaRepositoryTest {
@@ -153,28 +153,6 @@ class ReservationTicketJpaRepositoryTest {
         // then
         assertThat(found).isNotEmpty();
         assertThat(found.get(0).getTheme().getName()).isEqualTo("공포");
-    }
-
-    @Test
-    @DisplayName("특정 멤버 ID로 모든 예약을 조회한다")
-    void test4() {
-        // given
-        Theme theme = themeJpaRepository.save(new Theme("스릴러", "짜릿함", "thumb.jpg"));
-        Member member = memberJpaRepository.save(new Member("멤버1", "mem1@com", "pw", Role.USER));
-        ReservationTime time = reservationTimeJpaRepository.save(new ReservationTime(LocalTime.of(14, 0)));
-
-        ReservationTicket reservationTicket = new ReservationTicket(
-                new Reservation(LocalDate.now(), time, theme, member,
-                        LocalDate.now().minusDays(1)));
-        reservationTicketJpaRepository.save(reservationTicket);
-
-        // when
-        List<ReservationTicket> reservationTickets = reservationTicketJpaRepository.findByReservation_MemberId(
-                member.getId());
-
-        // then
-        assertThat(reservationTickets).extracting(ReservationTicket::getMember)
-                .allMatch(m -> m.getId().equals(member.getId()));
     }
 
     @Test

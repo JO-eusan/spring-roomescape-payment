@@ -1,11 +1,11 @@
 document.addEventListener('DOMContentLoaded', () => {
     Promise.all([
-        fetch('/reservations-mine')
+        fetch('/users/reservations')
             .then(response => {
                 if (response.status === 200) return response.json();
                 throw new Error('Reservation read failed');
             }),
-        fetch('/waiting/mine')
+        fetch('/users/waitings')
             .then(response => {
                 if (response.status === 200) return response.json();
                 throw new Error('Waiting read failed');
@@ -18,7 +18,9 @@ document.addEventListener('DOMContentLoaded', () => {
                     theme: r.theme,
                     date: r.date,
                     time: r.time,
-                    status: '예약'
+                    status: '예약',
+                    paymentKey: r.paymentKey,
+                    totalAmount: r.totalAmount
                 })),
                 ...waitings.map(w => ({
                     id: w.id,
@@ -46,7 +48,7 @@ function render(data) {
         row.insertCell(2).textContent = item.time;
 
         const statusText = item.status === '대기'
-            ? `${item.order}번째로 대기중`
+            ? `${item.order}번째 대기`
             : '예약';
 
         row.insertCell(3).textContent = statusText;
@@ -62,12 +64,14 @@ function render(data) {
             };
             cancelCell.appendChild(cancelButton);
         } else {
-            row.insertCell(4).textContent = '';
+                row.insertCell(4).textContent = '불가능';
+                row.insertCell(5).textContent = item.paymentKey;
+                row.insertCell(6).textContent = item.totalAmount;
         }
     });
 
     function requestDeleteWaiting(id) {
-        return fetch(`/waiting/${id}`, {method: 'DELETE'})
+        return fetch(`/waitings/${id}`, {method: 'DELETE'})
             .then(response => {
                 if (!response.ok) throw new Error('Delete failed');
                 return response;
